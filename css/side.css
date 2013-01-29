@@ -1,4 +1,8 @@
-body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee}
+@font-face {
+	font-family: cool_fonts;
+	src: url('gravitat.ttf');
+}
+body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
         .container-login{
             width:1024px;
             margin:0px auto;
@@ -16,8 +20,9 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee}
             background-color:#393939;
             height: auto;
             color: #fff;
-            font-size: 18px;
+            /*font-size: 18px;*/
             border-bottom: 30px solid #fff;
+            font-family: 'cool_fonts' !important;
         }
         .container-login span{
             width:550px;
