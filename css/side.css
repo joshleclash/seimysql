@@ -71,6 +71,19 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
             box-shadow: 3px 3px 3px #222;
             border: 1px solid #222;
         }
+        input[type="password"]{
+            width: 100%;
+            border: #222222 solid 1px;
+            height: 20px;
+            padding: 2px;
+            margin: 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        input[type="password"]:focus{
+            box-shadow: 3px 3px 3px #222;
+            border: 1px solid #222;
+        }
         input[type="button"]{
             width: auto;
             border: #222222 solid 2px;
@@ -113,4 +126,9 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
         a:hover{
             text-shadow: 2px 2px 6px #222;
         }
-
+        .error-response{
+            border:dotted 2px red; color:red; font-size:13px; padding:3px;
+        }
+        .ok-response{
+            border:dotted 2px green; color:green; font-size:18px;
+        }
