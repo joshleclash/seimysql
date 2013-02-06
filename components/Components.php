@@ -124,25 +124,24 @@ class Components{
         
     }
     public function sendRsForMail($rs=null,$mails=null,$subject=null,$msg=null){
-            $mail = new PHPMail();
-            /**MAILS FROM ICA**/
-            $mail->Username = "joshleclash@gmail.com"; 
-            $mail->Password = "5k4t3b04rd5";
-            $mail->From = 'Juan Web developer';
-            $mail->FromName = "Sistemas";   
+                       
+             
             /*GMAIL SENDER MAIL*/
-            /*$mail->IsSMTP();
-            $mail->Host='smtp.gmail.com';
-            $mail->Port=465;
-            $mail->SMTPAuth = true;
-            
+            $mail = new PHPMail();  // Instantiate your new class
+            $mail->IsSMTP(); // enable SMTP
+            $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+            $mail->SMTPAuth = true;  // authentication enabled
+            $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+                    
+            $mail->Username = "joshleclash@gmail.com";
             $mail->Password = "5k4t3b04rd5";
-            $mail->Username = "joshleclash@gmail.com"; 
             
             $mail->From = 'sisfito@ica.gov.co';
             $mail->FromName = "Juan Pablo Russi";
-             */
             $mail->Subject = $subject;
+           
             if(is_array($mails))
                 {
                 foreach($mails as $k=>$v):
@@ -181,7 +180,7 @@ class Components{
         }
         return $data;
     }
-    public static function obtenerFilesofFolder($nameFolder){
+    public static function obtenFilesofFolder($nameFolder){
         if(is_dir($nameFolder)){
             return scandir($nameFolder);
         }else{

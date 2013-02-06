@@ -135,7 +135,7 @@ class PHPMail
      *  Hosts will be tried in order.
      *  @var string
      */
-    var $Host        = "smtp.gmail.com";
+    var $Host        = "";
     /**
      *  Sets the default SMTP server port.
      *  @var int
