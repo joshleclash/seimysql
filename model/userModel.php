@@ -8,7 +8,7 @@ class userModel{
         $this->components = new Components();
         $this->conect=$this->components->getConnect();
     }
-    public function createUser(){
+    public function saveUser(){
         $string = '@#&0987654321ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         $temp="";
         for($i=0;$i<=10;$i++):
@@ -63,7 +63,7 @@ class userModel{
     if(strlen($peticion["password"])<=6){
             return array("codeError"=>0,"msg"=>"La clave es demasiado corta");
         }
-        $SQL="select * from usuario where identificacion=".$peticion["identificacion"];  
+        $SQL="select * from usuario t1, perfil t2 where t1.idPerfil = t2.idPerfil and t1.identificacion=".$peticion["identificacion"];  
         $rs = $this->components->__executeQuery($SQL,$this->conect);
         $row = mysql_fetch_array($rs);
         if(mysql_affected_rows($this->conect)<=0)

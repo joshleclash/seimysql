@@ -32,13 +32,13 @@ include_once '../config/config.php';
                         <td>Identificacion</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><input type="text" name="identificacion"/></td>
+                        <td colspan="2"><input type="text" name="identificacion" id="identificacion"/></td>
                     </tr>    
                     <tr>
                         <td>Clave</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><input type="password" name="password"/></td>
+                        <td colspan="2"><input type="password" name="password" id="password"/></td>
                     </tr>
                     <tr>
                         <td>
@@ -56,7 +56,10 @@ include_once '../config/config.php';
                 
                 
                 
-            </form> 
+            </form>
+            <div style="clear: left;" class="firma-container">
+                <?php echo DEVELOPER;?>
+            </div>
         </div>
     </body>
 </html>

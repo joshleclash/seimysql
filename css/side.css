@@ -3,13 +3,57 @@
 	src: url('gravitat.ttf');
 }
 body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
+        .container-header{
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: -50px;
+            height: 50px;
+            width: 101%;
+            background-color: #505050;
+            border-bottom: 15px solid #eeeeee;
+            color: #fff;
+            padding-top: 20px;
+        }
+        .container-header span{
+            margin-left: 50px;
+        }
+        .container-header span text{
+            font-size: 14px;
+            color: #cecece;
+        }
+        .container-menu{
+            background-color: #999999;
+            width: 300px;
+            padding: 10px;
+            border-radius: 15px;
+            float: left;
+        }
+        .container-menu ul{
+            list-style: none;
+            color: #222222;
+        }
+        .container-menu ul li{
+            color: #222222 !important;
+        }
+        .container-menu ul li a{
+            color: #fff;
+            font-size: 16px;
+            color: #222222;
+            font-weight: bold;
+        }
+        .container-menu ul li ul li a{
+            color: #fff;
+            font-size: 14px;
+            font-weight: normal;
+            
+        }
         .container-login{
             width:1024px;
             margin:0px auto;
             padding:25px;
             border:0px solid #222222;
             background-color:#fff;
-            height: 400px;
+            height: auto;
             border-radius: 10px;
             
         }
@@ -59,7 +103,7 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
             
         }
         input[type="text"]{
-            width: 100%;
+            width: 95%;
             border: #222222 solid 1px;
             height: 20px;
             padding: 2px;
@@ -118,6 +162,34 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
         input[type="submit"]:hover{
             box-shadow: 1px 1px 3px #000;
         }
+        input[type="reset"]{
+            width: auto;
+            border: #222222 solid 2px;
+            height: auto;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: #222;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 3px 3px 6px #000;
+            
+        }
+        input[type="reset"]:hover{
+            box-shadow: 1px 1px 3px #000;
+        }
+        
+        textarea{
+            resize: none; 
+            width: 95%;
+            border: #222222 solid 1px;
+            height: auto;
+            padding: 2px;
+            margin: 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+        }
         a{
             text-decoration: none;
             color:#222;
@@ -132,3 +204,55 @@ body{font-size: 18px; margin:50px 0px; padding:0px; background-color: #eee;}
         .ok-response{
             border:dotted 2px green; color:green; font-size:18px;
         }
+        /*APLICAtion login*/
+        .container-data{
+        float: right;
+        width: 680px;
+        height: 400px;
+        border-radius: 4px;
+        }
+        .create-form-container{
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            margin-top: 5%;
+            border: solid 2px #222;
+            border-radius: 10px;
+            background-color: #eeeeee;
+        }
+        .title-form{
+            background-color: #999999;
+            color: #222222;
+            padding: 5px;
+            font-family: 'cool_fonts';
+            font-size: 15px;
+            border-top-left-radius:  10px;
+            border-top-right-radius: 10px; 
+            text-align: center;
+        }
+        table{
+            width: 99%;
+            padding: 5px;
+            
+        }
+        table tr td{
+            font-family: "Arial";
+            font-size: 12px;
+        }
+        table tr th{
+            background-color: #999999;
+            color: #222222;
+            padding: 5px;
+            font-family: 'cool_fonts';
+            font-size: 15px;
+            border-top-left-radius:  10px;
+            border-top-right-radius: 10px; 
+        }
+        
+        
+ /*FIRMA CONTAINER*/
+ .firma-container{
+  font-size: 12px;
+  font-family: 'cool_fonts' !important;
+  color: #222222;
+ }

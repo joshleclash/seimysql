@@ -6,7 +6,7 @@ class userController{
        $this->userModel = new userModel(); 
     }
     public function createUserController($peticion){
-        return $this->userModel->createUser($peticion);
+        return $this->userModel->saveUser($peticion);
     }
     public function loginUserController($peticion){
         return $this->userModel->loginUser($peticion);
@@ -29,7 +29,7 @@ if(isset($_REQUEST['option'])){
              echo '<div class="error-response">'.$response["msg"].'</div>';
          }else{
              echo '<div class="ok-response" align="center"><img src="'.PATCH.'/images/icons/accept.png" style="margin-top: -10px;" align="middle">'.$response["msg"].
-                        '<script>setTimeout(function(){window.location="http://www.google.com";},2000)</script>'.
+                        '<script>setTimeout(function(){window.location="welcome.php";},2000)</script>'.
                   '</div>';
              
          }
