@@ -53,9 +53,6 @@ include_once '../controller/userController.php';
                         <td>Identificacion</td>
                         <td colspan="2"><input type="text" name="identificacion"/></td>
                     </tr>
-                     <tr>
-                        
-                    </tr>
                     <tr>
                         <td>
                             <input type="button" value="Registrar" onclick="submitObjectData('formLogin','idResponse',$('#formLogin').serializeArray());"/>  
@@ -63,12 +60,9 @@ include_once '../controller/userController.php';
                         <td><input type="button" value="Volver" onClick='window.location="index.php"'/>  </td>
                     </tr>
                 </table>
-                <div id="idResponse">askdjakshd</div>
-                
-                
-                
-                
-            </form> 
+                <div id="idResponse"></div>
+             </form> 
+            <div style="clear: left;" class="firma-container"><?php echo DEVELOPER;?></div>
         </div>
     </body>
 </html>

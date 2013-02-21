@@ -8,15 +8,22 @@ class grupoController{
         $this->components = new Components();
         $this->model = new grupoModel();
     }
-    public function saveGrupoController(){
-        return $this->model->saveGrupo();
+    public function saveGrupoController($dataForm){
+        $response = $this->model->saveGrupo($dataForm);
+        if($response["codeError"]==0){
+            $msg ='<div class="error-response">'.$response["msg"].'</div>';
+            
+        }else{
+            $msg = '<div class="ok-response">'.$response["msg"].'</div>';
+        }
+        return $msg; 
     }
 }
 if(isset($_REQUEST["option"])){
     $controller = new grupoController();
     switch($_REQUEST["option"]){
         case 0:
-            $controller->saveGrupoController();
+            echo $controller->saveGrupoController($_POST);
             break;
     }
 }

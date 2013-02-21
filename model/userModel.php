@@ -40,6 +40,12 @@ class userModel{
                 $rs = $this->components->__executeQuery($sql,$this->components->getConnect()); 
                 if($rs)
                     {
+                    $MsgMail = new MsgMail();
+                    $params = array('nombreUsuario'=>$_POST["nombres"]."-".$_POST["apellidos"],'identificacion'=>$_POST["identificacion"],'clave'=>$temp);
+                    $mail = $MsgMail->sendRsForMail($_POST["mail"], "Nuevo Usuario", $MsgMail->getMsgMailNewUser($params));
+                    if($mail){
+                        return array("codeError"=>1,"msg"=>"Usuario creado correctamente y notificacion enviada con exito");
+                    }
                        return array("codeError"=>1,"msg"=>"Usuario creado correctamente");
                     }
     }

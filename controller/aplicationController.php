@@ -8,6 +8,9 @@ class aplicationController{
     public function viewFormCreateGroup(){
         include_once '../views/formGrupo.php';
     }
+    public function viewFormRegisterUser(){
+        include_once '../views/formUsuario.php';
+    }
     
     
 }
@@ -16,7 +19,13 @@ if(isset($_REQUEST["option"])){
     switch($_REQUEST["option"]){
         case 0:
               echo $controller->viewFormCreateGroup();
-        break;
+            break;
+        case 1:
+             echo $controller->viewFormRegisterUser();
+            break;
+        case 2:
+             
+            break;
         
     
     }
