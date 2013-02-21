@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-02-2013 a las 14:10:49
+-- Tiempo de generación: 21-02-2013 a las 03:57:05
 -- Versión del servidor: 5.5.27
 -- Versión de PHP: 5.4.7
 
@@ -23,16 +23,17 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `concepto`
+-- Estructura de tabla para la tabla `esudiantecurso`
 --
 
-CREATE TABLE IF NOT EXISTS `concepto` (
-  `idConcepto` int(11) NOT NULL AUTO_INCREMENT,
-  `nombreConcepto` varchar(20) DEFAULT NULL,
-  `descripcionConcepto` text,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idConcepto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `esudiantecurso` (
+  `idEstudianteCurso` int(11) NOT NULL AUTO_INCREMENT,
+  `idEstudiante` int(11) DEFAULT NULL,
+  `idCurso` int(11) DEFAULT NULL,
+  `smalldatetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `idUsuario` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idEstudianteCurso`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='EstudianteCurso para relacionar n cursos a n estudiantes' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -42,126 +43,24 @@ CREATE TABLE IF NOT EXISTS `concepto` (
 
 CREATE TABLE IF NOT EXISTS `grupo` (
   `idGrupo` int(11) NOT NULL AUTO_INCREMENT,
-  `nombreGrupo` varchar(200) DEFAULT NULL,
-  `descripcionGrupo` text,
+  `dscGrupo` varchar(200) DEFAULT NULL,
+  `fechaCorte1` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fechaCorte2` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `fechaCorte3` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `fechaInicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `fechaFinal` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `smalldatetime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `observaciones` text,
   PRIMARY KEY (`idGrupo`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
--- Estructura de tabla para la tabla `grupomapaconceptual`
+-- Volcado de datos para la tabla `grupo`
 --
 
-CREATE TABLE IF NOT EXISTS `grupomapaconceptual` (
-  `idGrupoMapaConceptual` int(11) DEFAULT NULL,
-  `idGrupo` int(11) DEFAULT NULL,
-  `idMapa` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `grupousuario`
---
-
-CREATE TABLE IF NOT EXISTS `grupousuario` (
-  `idGrupoUsuario` int(11) NOT NULL AUTO_INCREMENT,
-  `idGrupo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idGrupoUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historialjuego`
---
-
-CREATE TABLE IF NOT EXISTS `historialjuego` (
-  `idHistorialJuego` int(11) NOT NULL AUTO_INCREMENT,
-  `respuestasAcertadas` varchar(20) DEFAULT NULL,
-  `fechaRealizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `duracionReal` int(11) DEFAULT NULL,
-  `idUsuario` int(11) DEFAULT NULL,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  `idJuego` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idHistorialJuego`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historialmapa`
---
-
-CREATE TABLE IF NOT EXISTS `historialmapa` (
-  `idHistorial` int(11) NOT NULL AUTO_INCREMENT,
-  `estado` enum('activo','inactivo') DEFAULT 'activo',
-  `fechaLimite` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `fechaInicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `vigencia` int(11) DEFAULT NULL,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idHistorial`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `juego`
---
-
-CREATE TABLE IF NOT EXISTS `juego` (
-  `idJuego` int(11) NOT NULL AUTO_INCREMENT,
-  `nombreJuego` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`idJuego`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `juegomapa`
---
-
-CREATE TABLE IF NOT EXISTS `juegomapa` (
-  `idJuegoMapa` int(1) NOT NULL AUTO_INCREMENT,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  `duracionJuego` varchar(20) DEFAULT NULL,
-  `estadoJuego` enum('activo','inactivo') DEFAULT 'activo',
-  `mostrarEstatus` enum('activo','inactivo') DEFAULT 'activo',
-  PRIMARY KEY (`idJuegoMapa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mapaconceptual`
---
-
-CREATE TABLE IF NOT EXISTS `mapaconceptual` (
-  `idMapaConceptual` int(11) NOT NULL AUTO_INCREMENT,
-  `fechaLimite` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `fechaInicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `duracionMapa` int(11) DEFAULT NULL,
-  `estadoMapa` enum('activo','inactivo') DEFAULT NULL,
-  `totalRelaciones` int(11) DEFAULT NULL,
-  `totalConceptos` int(11) DEFAULT NULL,
-  `nombreMapa` varchar(200) DEFAULT NULL,
-  `idTipoMapa` varchar(20) DEFAULT NULL,
-  `idUsuario` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idMapaConceptual`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mapaconceptualtematica`
---
-
-CREATE TABLE IF NOT EXISTS `mapaconceptualtematica` (
-  `idTematica` int(11) NOT NULL DEFAULT '0',
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idTematica`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `grupo` (`idGrupo`, `dscGrupo`, `fechaCorte1`, `fechaCorte2`, `fechaCorte3`, `fechaInicio`, `fechaFinal`, `smalldatetime`, `observaciones`) VALUES
+(3, 'kÃ±lkl', '2013-02-02 05:00:00', '2013-04-10 05:00:00', '2013-05-30 05:00:00', '2013-02-20 05:00:00', '2013-06-01 05:00:00', '2013-02-21 00:02:26', 'test'),
+(4, 'Pruebas1', '2013-02-15 05:00:00', '2013-03-22 05:00:00', '2013-05-17 05:00:00', '2013-02-01 05:00:00', '2013-06-01 05:00:00', '2013-02-21 00:03:47', 'Esta es una prueba de creacion de un grupo donde los estudiantes deven quedar amarrados a este');
 
 -- --------------------------------------------------------
 
@@ -186,67 +85,12 @@ INSERT INTO `perfil` (`idPerfil`, `nombrePerfil`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `relacion`
---
-
-CREATE TABLE IF NOT EXISTS `relacion` (
-  `idRelacion` int(11) NOT NULL AUTO_INCREMENT,
-  `idConceptoHijo` int(11) DEFAULT NULL,
-  `idConcepto` int(11) DEFAULT NULL,
-  `nombreRelacion` varchar(200) DEFAULT NULL,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idRelacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `resultadopregunta`
---
-
-CREATE TABLE IF NOT EXISTS `resultadopregunta` (
-  `idResultadoPregunta` int(11) NOT NULL AUTO_INCREMENT,
-  `valoracionPregunta` varchar(20) DEFAULT NULL,
-  `idConceptoHijo` int(11) DEFAULT NULL,
-  `idConceto` int(11) DEFAULT NULL,
-  `idMapaConceptual` int(11) DEFAULT NULL,
-  `idUsuario` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idResultadoPregunta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tematica`
---
-
-CREATE TABLE IF NOT EXISTS `tematica` (
-  `idTematica` int(11) NOT NULL AUTO_INCREMENT,
-  `nombreTematica` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`idTematica`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tipomapa`
---
-
-CREATE TABLE IF NOT EXISTS `tipomapa` (
-  `idTipoMapa` int(11) NOT NULL AUTO_INCREMENT,
-  `nombreTipoMapa` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`idTipoMapa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
   `idUsuario` int(11) NOT NULL AUTO_INCREMENT,
-  `idPerfil` int(11) DEFAULT NULL,
+  `idPerfil` int(11) DEFAULT '2',
   `nombreUsuario` varchar(60) DEFAULT NULL,
   `apellidoUsuario` varchar(60) DEFAULT NULL,
   `celular` varchar(20) DEFAULT NULL,
@@ -255,14 +99,19 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `identificacion` int(15) DEFAULT NULL,
   PRIMARY KEY (`idUsuario`),
   KEY `usuario perfil` (`idPerfil`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`idUsuario`, `idPerfil`, `nombreUsuario`, `apellidoUsuario`, `celular`, `mail`, `clave`, `identificacion`) VALUES
-(1, 1, 'Juan Pablo', 'Verano Russi', '3204796367', 'joshleclash@gmail.com', '123456', 1019002704);
+(1, 1, 'Juan Pablo', 'Verano Russi', '3204796367', 'joshleclash@gmail.com', '1234567890', 1019002704),
+(2, 2, 'Juan Camilo', 'Cruz', '3204796367', 'juan.verano@algo.com', 'h2c8wZmcVxS', 2147483647),
+(3, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'ts7FKKMuKsY', 2147483647),
+(4, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', '&LcnPN2qSsY', 2147483647),
+(5, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'u&oRhNdtRQL', 2147483647),
+(6, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'VrVON1Rl47b', 2147483647);
 
 --
 -- Restricciones para tablas volcadas
