@@ -63,7 +63,7 @@ include_once '../controller/userController.php';
                         <td><input type="button" value="Volver" onClick='window.location="index.php"'/>  </td>
                     </tr>
                 </table>
-                <div id="idResponse">askdjakshd</div>
+                <div id="idResponse"></div>
                 
                 
                 

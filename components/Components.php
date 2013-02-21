@@ -6,7 +6,7 @@ require_once('PHPMail.php');
 //Example for use Dialog
 //Dialog::Message('pedrito', 'hola', true);
 class Components{
-    public $dbName="";
+    public $dbName="uccmysql";
     private $conect;
     protected $error='error';
     private static $date=null;
