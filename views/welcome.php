@@ -35,10 +35,16 @@ include_once '../config/config.php';
                                         <img src="../images/icons/user_add.png">
                                         <a method="POST" href="#" id="addUser" action="'.PATCH.'/controller/aplicationController.php?option=1" onClick='."submitObjectData('addUser','container-data',{'csc':1})".'>Crear Usuario</a>
                                     </li>
+                                    <li>
+                                    <img src="../images/icons/user_edit.png">
+                                        <a method="POST" href="#" id="addminUser" action="'.PATCH.'/controller/aplicationController.php?option=2" onClick='."submitObjectData('addminUser','container-data',{'csc':1})".'>Administrar usuario</a>
+                                    </li>
                             </ul>
                     </li>
                 </ul>';
+                
                 ?>
+                <ul>
             </div>
             <div class="container-data" id="container-data">
                 

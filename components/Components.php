@@ -174,7 +174,7 @@ class Components{
         }
         return $data;
     }
-    public static function obtenFilesofFolder($nameFolder){
+    public static function getFilesofFolder($nameFolder){
         if(is_dir($nameFolder)){
             return scandir($nameFolder);
         }else{
