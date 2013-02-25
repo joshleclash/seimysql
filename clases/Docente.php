@@ -71,7 +71,7 @@
 	function cargarGrupos($NumIdDocente){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		//$Respuesta->addAlert("hola mundo");
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$Salida="<fieldset>";
 		$Salida.="<legend>Mis Grupos</legend>";
 		$Salida.="<table width='100%'>";
@@ -82,22 +82,22 @@
 		$Salida.="<tr><th>Nombre Grupo</th><th>Descripci&oacute;n</th>";
 		$Salida.="<th>Mapas Asociados</th>";
 		$Salida.="</tr>";
-		$Query="SELECT id_grupo as grupo, nombre_grupo as nom, descripcion_grupo as desc FROM grupo WHERE id_grupo IN(SELECT grupo_id_grupo FROM grupo_usuario WHERE usuario_id_usuario='".$NumIdDocente."');";
-		$ResultadoQuery=pg_query($Query);
-		if(!$ResultadoQuery){
+		$Query="SELECT idGrupo as grupo, nombreGrupo as nom, dscGrupo as desc FROM grupo WHERE idGrupo IN(SELECT idGrupo FROM grupoUsuario WHERE idUsuario='".$NumIdDocente."');";
+		$ResultadoQuery=$components->__executeQuery($Query,$components->getConnect());
+                if(!$ResultadoQuery){
 			$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
 		}
 		else{
-			$NumQuery=pg_num_rows($ResultadoQuery);
+			$NumQuery=  mysql_affected_rows($components->getConnect());
 			if($NumQuery>0){
-				while($VectorGrupo=pg_fetch_assoc($ResultadoQuery)){
+				while($VectorGrupo=  mysql_fetch_array($ResultadoQuery)){
 					$Salida.="<tr>";
 					$Salida.="<td valign='top'>";
 					//encontrar si alguno de los juegos ha sido ejecutado, si no es asi si se puede eliminar el grupo
-					$QueryRtas=pg_query("SELECT duracion_real FROM historial_juego_respuesta 
-					WHERE usuario_id_usuario IN (SELECT usuario_id_usuario FROM grupo_usuario WHERE grupo_id_grupo='".$VectorGrupo["grupo"]."');");
+					$QueryRtas=$components->__executeQuery("SELECT duracionReal FROM historialjuegorespuesta 
+					WHERE idUsuario IN (SELECT idUsuario FROM grupousuario WHERE idGrupo='".$VectorGrupo["grupo"]."');",$components->getConnect());
 					if($QueryRtas){
-						$NumRtas=pg_num_rows($QueryRtas);
+						$NumRtas=  mysql_affected_rows($components->getConnect());
 						if($NumRtas==0){
 							$Salida.="<a href='javascript:void(0)' onClick=\"confirmarEliminarGrupo('".$NumIdDocente."','".$VectorGrupo["grupo"]."')\" title='Haga click para eliminar el grupo'><img src='img/ico_eliminar.gif' border='0'></a>";
 						}
@@ -108,14 +108,14 @@
 					$Salida.="<td valign='top'>";
 					$Salida.="<span id='celda_".$VectorGrupo["grupo"]."'>";
 					//query para traer los mapas conceptuales asociados al grupo
-					$QueryMapas=pg_query("SELECT gm.mapa_conceptual_id_mapa as idmapa, mc.nombre_mapa as nom 
-					FROM grupo_mapa_conceptual gm, mapa_conceptual mc 
-					WHERE gm.grupo_id_grupo='".$VectorGrupo["grupo"]."' 
-					AND mc.id_mapa_conceptual=gm.mapa_conceptual_id_mapa");
+					$QueryMapas=$components->__executeQuery("SELECT gm.idMapa as idmapa, mc.nombreMapa as nom 
+					FROM grupomapaconceptual gm, mapaconceptual mc 
+					WHERE gm.idGrupo='".$VectorGrupo["grupo"]."' 
+					AND mc.idMapaConceptual=gm.idMapa",$components->getConnect());
 					if($QueryMapas){
-						if(pg_num_rows($QueryMapas)>0){
+						if(mysql_affected_rows($components->getConnect())>0){
 							$Salida.="<ul type='circle'>";
-							while($VecMapas=pg_fetch_assoc($QueryMapas)){
+							while($VecMapas=  mysql_fetch_array($QueryMapas)){
 								$Salida.="<li>".$VecMapas["nom"]."</li>";
 							}
 							$Salida.="</ul>";
@@ -140,7 +140,7 @@
 		$Salida.="</table>";
 		$Salida.="</fieldset>";
 		$Respuesta->addAssign("Contenido","innerHTML",$Salida);
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('cargarGrupos');
@@ -193,16 +193,17 @@
 	 * @param integer $IdGrupo N�mero de identificaci�n del grupo
 	 * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	 */
+        /***AQUI QUEDAMOS JUAN RUSSI***/
 	function editarGrupoMapa($NumIdDocente,$IdGrupo){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$VecIdMapas=array();
-		$QueryMapas=pg_query("SELECT mapa_conceptual_id_mapa as idmapa 
+		$QueryMapas=$components->__executeQuery("SELECT id_mapa as idmapa 
 		FROM grupo_mapa_conceptual  
-		WHERE grupo_id_grupo='".$IdGrupo."'");
+		WHERE grupo_id_grupo='".$IdGrupo."'",$components->getConnect());
 		if($QueryMapas){
-			if(pg_num_rows($QueryMapas)>0){
-				while($VecMapas=pg_fetch_assoc($QueryMapas)){
+			if(mysql_num_rows($components->getConnect())>0){
+				while($VecMapas=  mysql_fetch_array($QueryMapas)){
 					$VecIdMapas[]=$VecMapas["idmapa"];
 				}
 			}
@@ -833,7 +834,7 @@
 		$Salida.= "</fieldset>";
 		cerrarConexion($components->getConnect());
 		$Respuesta->AddAssign("Contenido","innerHTML",$Salida);
-		$Respuesta->AddScriptCall("xajax_mostrarGrafica",$_SESSION["NumIdentidad"],1,"","");
+		$Respuesta->AddScriptCall("xajax_mostrarGrafica",$_SESSION["_User"]->identificacion,1,"","");
 		return $Respuesta->getXML();
 	}
 	$Xajax->registerFunction('recordatorioDocente');

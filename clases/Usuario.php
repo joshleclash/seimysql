@@ -189,20 +189,18 @@
 		$components = getComponents();
 		$Salida = "";
 		
-		$SqlDest = "SELECT m.id_mapa_conceptual as Mapa, m.nombre_mapa as NomMap, count(a.juego_mapa_mapa_conceptual_id_mapa_conceptual) as Total ";
-		$SqlDest.= "FROM historial_juego_respuesta a, mapa_conceptual m ";
-		$SqlDest.= "WHERE a.usuario_id_usuario IN(";
-		$SqlDest.= "	SELECT b.usuario_id_usuario FROM grupo_usuario b ";
-		$SqlDest.= "	WHERE b.grupo_id_grupo IN(";
-		$SqlDest.= "		SELECT c.grupo_id_grupo FROM grupo_usuario c ";
-		$SqlDest.= "		WHERE c.usuario_id_usuario='".$_SESSION["NumIdentidad"]."'))";
-		$SqlDest.= "AND m.estado_mapa = '1' ";
-		$SqlDest.= "AND m.id_mapa_conceptual = a.juego_mapa_mapa_conceptual_id_mapa_conceptual ";
-		$SqlDest.= "GROUP BY m.id_mapa_conceptual, m.nombre_mapa ORDER BY Total DESC LIMIT 3;";
-		echo $SqlDest;
+		$SqlDest = "SELECT m.idMapaConceptual as Mapa, m.nombreMapa as NomMap, count(a.idMapaConceptual) as Total ";
+		$SqlDest.= "FROM historiajuegorespuesta a, mapaconceptual m ";
+		$SqlDest.= "WHERE a.idUsuario IN(";
+		$SqlDest.= "	SELECT b.idUsuario FROM grupousuario b ";
+		$SqlDest.= "	WHERE b.idGrupo IN(";
+		$SqlDest.= "		SELECT c.idGrupo FROM grupousuario c ";
+		$SqlDest.= "		WHERE c.idUsuario='".$_SESSION["_User"]->identificacion."'))";
+		$SqlDest.= "AND m.estadoMapa = '1' ";
+		$SqlDest.= "AND m.idMapaConceptual = a.idMapaConceptual ";
+		$SqlDest.= "GROUP BY m.idMapaConceptual, m.nombreMapa ORDER BY Total DESC LIMIT 3;";
 		$QueryDest = $components->__executeQuery($SqlDest,$components->getConnect());
-	
-		if(!$QueryDest){
+                if(!$QueryDest){
             		$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 			return $Respuesta->getXML();
 		}
@@ -249,9 +247,10 @@
 				$Posicion++;
 			}
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta->getXML();
 	}
+        
 	$Xajax->registerFunction('mostrarDestacados');
 	
 	/**

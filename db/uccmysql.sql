@@ -58,9 +58,7 @@ CREATE TABLE IF NOT EXISTS `grupo` (
 -- Volcado de datos para la tabla `grupo`
 --
 
-INSERT INTO `grupo` (`idGrupo`, `dscGrupo`, `fechaCorte1`, `fechaCorte2`, `fechaCorte3`, `fechaInicio`, `fechaFinal`, `smalldatetime`, `observaciones`, `nombreGrupo`) VALUES
-(3, 'kÃ±lkl', '2013-02-02 05:00:00', '2013-04-10 05:00:00', '2013-05-30 05:00:00', '2013-02-20 05:00:00', '2013-06-01 05:00:00', '2013-02-21 00:02:26', 'test', NULL),
-(4, 'Pruebas1', '2013-02-15 05:00:00', '2013-03-22 05:00:00', '2013-05-17 05:00:00', '2013-02-01 05:00:00', '2013-06-01 05:00:00', '2013-02-21 00:03:47', 'Esta es una prueba de creacion de un grupo donde los estudiantes deven quedar amarrados a este', NULL);
+
 
 -- --------------------------------------------------------
 
@@ -276,13 +274,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`idUsuario`, `idPerfil`, `nombreUsuario`, `apellidoUsuario`, `celular`, `mail`, `clave`, `identificacion`) VALUES
-(1, 1, 'Juan Pablo', 'Verano Russi', '3204796367', 'joshleclash@gmail.com', '1234567890', 1019002704),
-(2, 2, 'Juan Camilo', 'Cruz', '3204796367', 'juan.verano@algo.com', 'h2c8wZmcVxS', 2147483647),
-(3, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'ts7FKKMuKsY', 2147483647),
-(4, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', '&LcnPN2qSsY', 2147483647),
-(5, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'u&oRhNdtRQL', 2147483647),
-(6, 2, 'Juan Camilo', 'Cruz', '3204796367', 'joshleclash@gmail.com', 'VrVON1Rl47b', 2147483647);
+
 
 --
 -- Restricciones para tablas volcadas

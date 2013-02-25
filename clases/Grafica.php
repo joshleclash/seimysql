@@ -1,7 +1,7 @@
 <?php
 /**
- * Esta función se encarga de devolver el nombre del mes
- * @param string $Num Número del mes
+ * Esta funciï¿½n se encarga de devolver el nombre del mes
+ * @param string $Num Nï¿½mero del mes
  * @return string Nombre del mes
  */
 function devolverMes($Num){
@@ -33,7 +33,7 @@ function devolverMes($Num){
 	}	
 }
 /**
- * Esta función se encarga de quitar el contenido HTML de los campos especificados
+ * Esta funciï¿½n se encarga de quitar el contenido HTML de los campos especificados
  * @param integer $SpanInicio Numero de el campo inicial a limpiar
  * @param integer $SpanFin Numero de el campo final a limpiar
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
@@ -49,9 +49,9 @@ function limpiarSpanEst($SpanInicio,$SpanFin){
 $Xajax->registerFunction("limpiarSpanEst");
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los grupos del docente
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los grupos del docente
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarGruposGrafica($NumDocente,$TipoGrafica){
@@ -78,9 +78,9 @@ function cargarGruposGrafica($NumDocente,$TipoGrafica){
 $Xajax->registerFunction('cargarGruposGrafica');
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los mapas del docente
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los mapas del docente
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarMapasGrafica($NumDocente,$TipoGrafica){
@@ -107,9 +107,9 @@ function cargarMapasGrafica($NumDocente,$TipoGrafica){
 $Xajax->registerFunction('cargarMapasGrafica');
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los grupos del docente
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los grupos del docente
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarCombosGrafica($NumDocente,$TipoGrafica){
@@ -147,10 +147,10 @@ function cargarCombosGrafica($NumDocente,$TipoGrafica){
 $Xajax->registerFunction('cargarCombosGrafica');
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los estudiantes del docente segun grupo
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
- * @param integer $IdGrupo Código del grupo seleccionado
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los estudiantes del docente segun grupo
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
+ * @param integer $IdGrupo Cï¿½digo del grupo seleccionado
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarEstudiantes($NumDocente,$TipoGrafica,$IdGrupo){
@@ -191,11 +191,11 @@ function cargarEstudiantes($NumDocente,$TipoGrafica,$IdGrupo){
 $Xajax->registerFunction('cargarEstudiantes');
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los mapas de un grupo seleccionado
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
- * @param integer $IdGrupo Código del grupo seleccionado
- * @param integer $IdEstudiante Número de identificación del estudiante
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los mapas de un grupo seleccionado
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
+ * @param integer $IdGrupo Cï¿½digo del grupo seleccionado
+ * @param integer $IdEstudiante Nï¿½mero de identificaciï¿½n del estudiante
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarMapas($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante=""){
@@ -238,11 +238,11 @@ function cargarMapas($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante=""){
 $Xajax->registerFunction('cargarMapas');
 
 /**
- * Esta función se encarga de mostrar una lista desplegable con los tiempos para graficar resultados
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
- * @param integer $IdGrupo Código del grupo seleccionado
- * @param integer $IdEstudiante Número de identificación del estudiante
+ * Esta funciï¿½n se encarga de mostrar una lista desplegable con los tiempos para graficar resultados
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
+ * @param integer $IdGrupo Cï¿½digo del grupo seleccionado
+ * @param integer $IdEstudiante Nï¿½mero de identificaciï¿½n del estudiante
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function cargarTiempo($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante){
@@ -266,12 +266,12 @@ function cargarTiempo($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante){
 $Xajax->registerFunction('cargarTiempo');
 
 /**
- * Esta función se encarga de mostrar el grafico estadisticos segun los datosa proporcionados
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
- * @param integer $IdGrupo Código del grupo seleccionado
- * @param integer $IdMapa Código del mapa seleccionado
- * @param integer $IdEstudiante Número de identificación del estudiante
+ * Esta funciï¿½n se encarga de mostrar el grafico estadisticos segun los datosa proporcionados
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
+ * @param integer $IdGrupo Cï¿½digo del grupo seleccionado
+ * @param integer $IdMapa Cï¿½digo del mapa seleccionado
+ * @param integer $IdEstudiante Nï¿½mero de identificaciï¿½n del estudiante
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=""){
@@ -286,7 +286,7 @@ function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=
 		$Respuesta->addAlert("Debe seleccionar un estudiante.");
 		return $Respuesta;
 	}
-	$Conexion=abrirConexion();
+	$components=  getComponents();
 	$VecLineas=array();
 	$MatrizLineas=array();
 	$VecSerieHorizontal=array();
@@ -299,9 +299,9 @@ function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=
 				$VecSerieVertical[]=$i;
 			}*/
 			//horizontal
-			$Mapas=pg_query("SELECT id_mapa_conceptual as id, nombre_mapa as nom FROM mapa_conceptual WHERE usuario_id_usuario='".$NumDocente."' ORDER BY id");
+			$Mapas=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDocente."' ORDER BY id",$components->getConnect());
 			if($Mapas){
-				if(pg_num_rows($Mapas)>0){
+				if(mysql_affected_rows($components->getConnect())>0){
 					while($vm=pg_fetch_assoc($Mapas)){
 						$VecSerieHorizontal[]=$vm["id"]."@".ucwords(strtolower($vm["nom"]));
 					}
@@ -470,7 +470,7 @@ function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=
 						}
 					}
 					else{
-						$Respuesta->addAlert("Este mapa no se encuentra asociado con algún grupo. Por favor, dirijase a Mis Grupos y vinculelo con algún grupo disponible.");
+						$Respuesta->addAlert("Este mapa no se encuentra asociado con algï¿½n grupo. Por favor, dirijase a Mis Grupos y vinculelo con algï¿½n grupo disponible.");
 						$Indicador=false;
 					}
 					if($Indicador!==false){
@@ -540,14 +540,14 @@ function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=
 			}
 		break;
 	}
-	cerrarConexion($Conexion);
+	cerrarConexion($components->getConnect());
 	return $Respuesta;
 }
 $Xajax->registerFunction('mostrarGrafica');
 
 /**
- * Esta función se encarga de generar la imagen del grafico segun los datos proporcionados
- * @param integer $TipoGrafica Código de la gráfica seleccionada
+ * Esta funciï¿½n se encarga de generar la imagen del grafico segun los datos proporcionados
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
  * @param string[] $VecLineas Vector que contiene informacion sobre cada linea de una grafica
  * @param integer[] $MatrizLineas Matriz que contiene los valores a mostrar en la grafica
  * @param string[] $VecSerieHorizontal Vector que contiene los titulos del eje X en la grafica
@@ -672,7 +672,7 @@ function crearGrafica($TipoGrafica,$VecLineas,$MatrizLineas,$VecSerieHorizontal)
 			  $Test->setFontProperties("lib/pChart.1.26e/Fonts/tahoma.ttf",8);
 			  $Test->drawLegend(65,35,$DataSet->GetDataDescription(),255,255,255);
 			  $Test->setFontProperties("lib/pChart.1.26e/Fonts/tahoma.ttf",10);
-			  $Test->drawTitle(50,22,"Comparación de grupos por mapa",50,50,50,585);
+			  $Test->drawTitle(50,22,"Comparaciï¿½n de grupos por mapa",50,50,50,585);
 			 
 			//definimos el nombre del archivo
 			$arch=glob("img/Est".$TipoGrafica."_*.png");
@@ -735,12 +735,12 @@ function crearGrafica($TipoGrafica,$VecLineas,$MatrizLineas,$VecSerieHorizontal)
 }
 
 /**
- * Esta función se encarga de mostrar un reporte estadistico segun los datos proporcionados
- * @param integer $NumDocente Número de identificación del docente
- * @param integer $TipoGrafica Código de la gráfica seleccionada
- * @param integer $IdGrupo Código del grupo seleccionado
- * @param integer $IdEstudiante Número de identificación del estudiante
-  * @param integer $IdMapa Código del mapa seleccionado
+ * Esta funciï¿½n se encarga de mostrar un reporte estadistico segun los datos proporcionados
+ * @param integer $NumDocente Nï¿½mero de identificaciï¿½n del docente
+ * @param integer $TipoGrafica Cï¿½digo de la grï¿½fica seleccionada
+ * @param integer $IdGrupo Cï¿½digo del grupo seleccionado
+ * @param integer $IdEstudiante Nï¿½mero de identificaciï¿½n del estudiante
+  * @param integer $IdMapa Cï¿½digo del mapa seleccionado
  * @return xajaxResponse Objeto con la respuesta de la libreria XAjax
  */
 function mostrarTablaReportes($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante="",$IdMapa){
@@ -815,7 +815,7 @@ function mostrarTablaReportes($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante=""
 				$Respuesta->addAssign("SpanGrafica","innerHTML",$Salida);
 			}
 			else{
-				$Respuesta->addAlert("Este mapa no se encuentra asociado con algún grupo. Por favor, dirijase a Mis Grupos y vinculelo con algún grupo disponible.");
+				$Respuesta->addAlert("Este mapa no se encuentra asociado con algï¿½n grupo. Por favor, dirijase a Mis Grupos y vinculelo con algï¿½n grupo disponible.");
 			}
 		}
 			
@@ -896,7 +896,7 @@ function mostrarTablaReportes($NumDocente,$TipoGrafica,$IdGrupo,$IdEstudiante=""
 				$Respuesta->addAssign("SpanGrafica","innerHTML",$Salida);
 			}
 			else{
-				$Respuesta->addAlert("Este mapa no se encuentra asociado con algún grupo. Por favor, dirijase a Mis Grupos y vinculelo con algún grupo disponible.");
+				$Respuesta->addAlert("Este mapa no se encuentra asociado con algï¿½n grupo. Por favor, dirijase a Mis Grupos y vinculelo con algï¿½n grupo disponible.");
 			}
 		}
 			

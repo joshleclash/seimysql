@@ -20,12 +20,12 @@ include("../clases/Grafica.php");
 
 function inicio($Funcion){
 	$Respuesta = new xajaxResponse('ISO-8859-1');
-	if($_SESSION["JuegoAbierto"]==1){
+	if(@$_SESSION["JuegoAbierto"]==1){
 		$Respuesta->addAlert("Por favor, termina el juego primero.");
 	}
 	else{
 		if($Funcion==""){
-			if(strtolower($_SESSION["PerfilUsuario"])=="estudiante"){
+			if(strtolower($_SESSION["_User"]->nombrePerfil)=="Estudiante"){
 				$Respuesta->AddScriptCall("xajax_recordatorioEstudiante");
 			}
 			else{
