@@ -29,7 +29,7 @@ if(isset($_REQUEST['option'])){
              echo '<div class="error-response">'.$response["msg"].'</div>';
          }else{
              echo '<div class="ok-response" align="center"><img src="'.PATCH.'/images/icons/accept.png" style="margin-top: -10px;" align="middle">'.$response["msg"].
-                        '<script>setTimeout(function(){window.location="welcome.php";},2000)</script>'.
+                        '<script>setTimeout(function(){window.location="principal.php";},2000)</script>'.
                   '</div>';
              
          }

@@ -1,0 +1,65 @@
+.banner{
+	width:995px;
+	height:80px;
+}
+
+.iFrame{
+	visibility:hidden;
+	width:1px;
+	height:1px;
+}
+
+.menuIzquierdo{
+	height:185px;
+	background-color:#99D299;
+	border:0px;
+	font-weight:bold;
+}
+
+.informacionUsuario{
+	height:36px;
+	background-color:#FFCC66;
+	color:#003300;
+	font-weight:bold;
+}
+
+body {
+	margin:0px 0px 0px 0px;
+	color:#003300;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	background-color:#E2F1E2;
+	background-color:#D6EBD6;
+}
+
+legend{
+	color:#003300;
+	font-weight:bolder;
+	font-size:14px;
+}
+
+a:link,a:active,a:visited,a:hover{
+	color:#003300;
+	font-weight:600;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+}
+
+#Destacados{
+	width:180px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:11pt;
+	background-color:transparent;
+	overflow-x:hidden;
+	overflow:hidden;
+	margin:0px;
+	border:0px;
+	height:140px;
+}
+
+.highlights{
+	width:180px;
+	font-family:Arial, Helvetica, sans-serif;
+	border:0px;
+	height:140px;
+}

@@ -1,0 +1,29 @@
+#Arbol{
+	list-style-type:decimal;
+}
+
+#BotonMenu{
+	cursor:pointer;
+}
+
+#numhojas{
+	width:20px;
+}
+
+.Relacion{
+	color:#FF0000;
+	cursor:pointer;
+}
+
+.Concepto{
+	color:#0000FF;
+	cursor:pointer;
+}
+
+#Nombre{
+	cursor:pointer;
+}
+
+#NombreRaiz{
+	cursor:pointer;
+}
