@@ -6,11 +6,11 @@
 	$NivelMapa=1;
 	//Funcion para . Recibe $PathArchivo y el id del tipo de mapa.
 	/**
-	* Esta función se encarga de leer el archivo exportable de Knowledge Master
+	* Esta funciï¿½n se encarga de leer el archivo exportable de Knowledge Master
 	* @param string $NombreArchivo Ruta del archivo exportable de KM
-	* @param integer $TipoMapa Código del tipo de mapa
+	* @param integer $TipoMapa Cï¿½digo del tipo de mapa
 	* @param integer $Duracion Tiempo limite del mapa en segundos 
-	* @param integer $Tematica Código de la tematica del mapa
+	* @param integer $Tematica Cï¿½digo de la tematica del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function interpretarMapaConceptual($NombreArchivo, $TipoMapa, $Duracion, $Tematica)
@@ -95,7 +95,7 @@
 			$RtaMapa=guardarMapaConceptual($Concepto,$InfoGeneralConcepto,$Duracion,$Tema[0]);
 			if($RtaMapa===true)
 			{
-				$Respuesta->addAlert("El archivo ha sido subido con éxito.");
+				$Respuesta->addAlert("El archivo ha sido subido con ï¿½xito.");
 				$Respuesta->addScript("xajax_cargarListadoMapa();");
 			}
 			else
@@ -111,62 +111,69 @@
 	$Xajax->registerFunction('interpretarMapaConceptual');
 	
 	/**
-	* Esta función se encarga de guardar los datos del mapa conceptual en la base de datos, tanto desde Knowledge Master como del editor
+	* Esta funciï¿½n se encarga de guardar los datos del mapa conceptual en la base de datos, tanto desde Knowledge Master como del editor
 	* @param string[] $Concepto Matriz que contiene informacion sobre todos los conceptos y relaciones de un mapa
-	* @param string[] $InfoGeneralConcepto Vector que contiene información general del mapa
+	* @param string[] $InfoGeneralConcepto Vector que contiene informaciï¿½n general del mapa
 	* @param integer $Duracion Tiempo limite del mapa en segundos 
-	* @param integer $Tematica Código de la tematica del mapa
+	* @param integer $Tematica Cï¿½digo de la tematica del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function guardarMapaConceptual($Concepto,$InfoGeneralConcepto,$Duracion,$Tematica)
-	{
-		$Conexion=abrirConexion();
-		if($Conexion!=false)
+        {
+            
+		$components=  getComponents();
+		if($components!=false)
 		{
-			$NumIdentidad = $_SESSION["NumIdentidad"];
-			$ConsultaIdMP="SELECT id_mapa_conceptual FROM mapa_conceptual WHERE nombre_mapa = '".$InfoGeneralConcepto['NombreMapa']."' 
-					   AND usuario_id_usuario = ".$NumIdentidad.";";
-			$Today=date("Y-m-d H:i:s");
+			$NumIdentidad = $_SESSION["_User"]->identificacion;
+			$ConsultaIdMP="SELECT idMapaConceptual FROM mapaconceptual WHERE nombreMapa = '".$InfoGeneralConcepto['NombreMapa']."' 
+					   AND idUsuario = ".$NumIdentidad.";";
+			$Today=$components->getDate('America/Bogota',"Y-m-d H:i:s");
 			$NowDate = getdate(strtotime($Today));
 			$DateLimit = date("Y-m-d H:i:s", mktime( ($NowDate["hours"]+$Duracion), ($NowDate["minutes"]),($NowDate["seconds"]),($NowDate["mon"]),($NowDate["mday"]),($NowDate["year"])));
-			$ResultadoIdMP=pg_query($ConsultaIdMP);   
-			if(pg_num_rows($ResultadoIdMP)==0)
+			$ResultadoIdMP=$components->__executeQuery($ConsultaIdMP,$components->getConnect());   
+			if(mysql_affected_rows($components->getConnect())==0)
 			{
-				$InsercionMP="INSERT INTO mapa_conceptual VALUES (".$NumIdentidad.",".$InfoGeneralConcepto['TipoMapa'].",'".trim($InfoGeneralConcepto['NombreMapa'])."',".$InfoGeneralConcepto['Conceptos'].",".$InfoGeneralConcepto['Relaciones'].",'".$InfoGeneralConcepto['EstadoMapa']."','".$Duracion."','".$Today."','".$DateLimit."');";
-				//echo $InsercionMP;
-				if(pg_query($InsercionMP))
+                            
+				$InsercionMP="INSERT INTO mapaconceptual
+                                                (idUsuario, idTipoMapa, nombreMapa, totalConceptos, totalRelaciones, estadoMapa, duracionMapa, fechaInicio, fechaLimite)
+                                                VALUES (".$NumIdentidad.",".$InfoGeneralConcepto['TipoMapa'].",'".$InfoGeneralConcepto['NombreMapa']."',".$InfoGeneralConcepto['Conceptos'].",".$InfoGeneralConcepto['Relaciones'].",'".$InfoGeneralConcepto['EstadoMapa']."','".$Duracion."','".$Today."','".$DateLimit."');";
+                                if($components->__executeQuery($InsercionMP,$components->getConnect()))
 				{
-					$ConsultaIdMP="SELECT id_mapa_conceptual FROM mapa_conceptual WHERE nombre_mapa = '".trim($InfoGeneralConcepto['NombreMapa'])."' 
-						   AND usuario_id_usuario = ".$NumIdentidad.";";
-					$ResultadoIdMP=pg_query($ConsultaIdMP);
-					$IdMP=pg_fetch_array($ResultadoIdMP,0);
+					$ConsultaIdMP="SELECT idMapaConceptual FROM mapaconceptual WHERE nombreMapa = '".trim($InfoGeneralConcepto['NombreMapa'])."' 
+						   AND idUsuario = ".$NumIdentidad.";";
+                                        
+					$ResultadoIdMP=$components->__executeQuery($ConsultaIdMP,$components->getConnect());
+					$IdMP=mysql_fetch_array($ResultadoIdMP);
 					//Consulta del ID poniendo todos los parametros o solo nombre del mapa.
 					foreach( $Concepto as $Clave=>$Vector )
 					{
-						//CARACTERES ESPECIALES ºy CON TILDE, ETC NO ACEPTA.
-						$InsercionConcepto="INSERT INTO concepto VALUES(".$IdMP['id_mapa_conceptual'].",'".trim($Vector['NumConcepto'])."',
-						'".trim($Vector['NomConcepto'])."','".trim($Vector['TextoDesc'])."');";
-						if(!pg_query($InsercionConcepto))
+						//CARACTERES ESPECIALES ï¿½y CON TILDE, ETC NO ACEPTA.
+						$InsercionConcepto="INSERT INTO concepto 
+                                                (nombreConcepto, textoConcepto, idMapaConceptual)     
+                                                VALUES('".trim($Vector['NomConcepto'])."',
+						'".trim($Vector['NumConcepto'])."',".$IdMP['idMapaConceptual'].")";
+						if(!$components->__executeQuery($InsercionConcepto,$components->getConnect()))
 						{
 							return "Insercion a concepto fallo.";
 						}
 					}
-					$ConsultaConcepto="SELECT id_concepto FROM concepto
-										WHERE mapa_conceptual_id_mapa_conceptual=".$IdMP['id_mapa_conceptual'].";";
-					$ResultadoQuery=pg_query($ConsultaConcepto);
-					$ResultadoVector=pg_fetch_all($ResultadoQuery);
+                                        $ConsultaConcepto="SELECT idConcepto FROM concepto
+										WHERE idMapaConceptual=".$IdMP['idMapaConceptual'].";";
+					$ResultadoQuery=$components->__executeQuery($ConsultaConcepto,$components->getConnect());
+					$ResultadoVector=  mysql_fetch_array($ResultadoQuery);
 					foreach($ResultadoVector as $Indice => $Valor )
 					{
-						foreach($Concepto as $Clave => $Vector)
+                                            	foreach($Concepto as $Clave => $Vector)
 						{
-							if(trim($Vector["NumConcepto"])==$Valor["id_concepto"] && $Clave > 0)
+                                                    	if(trim(@$Vector["NumConcepto"])==@$Valor["idConcepto"] && $Clave > 0)
 							{
 								//Si son iguales hacer la insercion de la tabla relacion. 
 								//Campos($IdMP,$Valor,$Concepto['NumRelacionUp'],$Concepto['RelacionUp'])
 								$InsercionRelacion="INSERT INTO relacion 
-								VALUES(".$IdMP['id_mapa_conceptual'].",'".trim($Vector['NumRelacionUp'])."','".trim($Vector['NumConcepto'])."',
+                                                                    
+								VALUES(".$IdMP['idMapaConceptual'].",'".trim($Vector['NumRelacionUp'])."','".trim($Vector['NumConcepto'])."',
 								'".trim($Vector['RelacionUp'])."');";
-								if(!pg_query($InsercionRelacion))
+                                                                if(!$components->__executeQuery($InsercionRelacion,$components->getConnect()))
 								{
 									return "No sirvio la insercion de relacion";
 								}
@@ -174,8 +181,8 @@
 						}
 					}
 										//insercion de la tematica
-					$InsertarTematica="INSERT INTO mapa_conceptual_tematica VALUES('".$Tematica."','".$IdMP['id_mapa_conceptual']."')";
-					if(!pg_query($InsertarTematica)){
+					$InsertarTematica="INSERT INTO mapa_conceptual_tematica VALUES('".$Tematica."','".$IdMP['idMapaConceptual']."')";
+					if(!$components->__executeQuery($InsertarTematica,$components->getConnect())){
 						return "No hay juegos para insertar";
 					}
 
@@ -198,22 +205,22 @@
 	}	
 	
 	/**
-	* Esta función se encarga de mostrar la interfaz para crear mapas conceptuales subiendo el archivo de KM
+	* Esta funciï¿½n se encarga de mostrar la interfaz para crear mapas conceptuales subiendo el archivo de KM
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function cargarFormaMapa(){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components= getComponents();
 		$Salida="<form method='post' name='FormaMapa' enctype='multipart/form-data' action='subirmapa.php' target='Puente'>";
 		$Salida.="<table width='100%'>";
 		$Salida.="<tr><td>Tipo de mapa:</td><td>";
 		$Salida.="<select name='IdTipoMapa'>";
 		$Salida.="<option value=''>(Seleccione un tipo)</option>";
-		$QueryTipoMapa=pg_query("SELECT id_tipo_mapa as id, nombre_tipo_mapa as nombre FROM tipo_mapa;");
+		$QueryTipoMapa=$components->__executeQuery("SELECT id_tipo_mapa as id, nombre_tipo_mapa as nombre FROM tipo_mapa;",$components->getConnect());
 		if($QueryTipoMapa){
-			$NumTipoMapa=pg_num_rows($QueryTipoMapa);
+			$NumTipoMapa=  mysql_affected_rows($components->getConnect());
 			if($NumTipoMapa>0){
-				while($VecTipoMapa=pg_fetch_assoc($QueryTipoMapa)){
+				while($VecTipoMapa=  mysql_fetch_array($QueryTipoMapa)){
 					$Salida.="<option value='".$VecTipoMapa["id"]."'>".$VecTipoMapa["nombre"]."</option>";
 				}
 			}
@@ -245,7 +252,7 @@
 		$Salida.="</td></tr>";
 		$Salida.="</table>";
 		$Salida.="</form>";
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		$Respuesta->addAssign("ContenidoMapa","innerHTML",$Salida);
 		$Respuesta->addScriptCall("xajax_cargarComboTematica","Tematica",'xajax_cargarFormaMapa','2');
 		return $Respuesta;
@@ -253,39 +260,41 @@
 	$Xajax->registerFunction('cargarFormaMapa');
 	
 	/**
-	* Esta función se encarga de guardar la tematica creada por el docente
-	* @param string $NomTematica Nombre de la temática
-	* @param string $Funcion Cadena que contiewne la funcion a la cual debe llamarse después de guardar la tematica
+	* Esta funciï¿½n se encarga de guardar la tematica creada por el docente
+	* @param string $NomTematica Nombre de la temï¿½tica
+	* @param string $Funcion Cadena que contiewne la funcion a la cual debe llamarse despuï¿½s de guardar la tematica
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function guardarTematica($NomTematica,$Funcion){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
-		$InsertarTematica="INSERT INTO tematica VALUES('".$NomTematica."');";
-		if(!pg_query($InsertarTematica)){
-			$Respuesta->addAlert("Hubo un error al guardar la temática.");
+		$components=  getComponents();
+                $InsertarTematica="INSERT INTO tematica
+                                    (nombreTematica)            
+                                    VALUES ('".$NomTematica."');";
+		if(!$components->__executeQuery($InsertarTematica,$components->getConnect())){
+			$Respuesta->addAlert("Hubo un error al guardar la temï¿½tica.");
 		}
 		else{
-			$Respuesta->addAlert("Temática guardada con éxito.");
+			$Respuesta->addAlert("Temï¿½tica guardada con ï¿½xito.");
 		}
 		$Respuesta->addScriptCall($Funcion);
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('guardarTematica');
 	
 	/**
-	* Esta función se encarga de mostrar el listado de mapas conceptuales cuando se hace click en Mis Mapas Conceptuales
+	* Esta funciï¿½n se encarga de mostrar el listado de mapas conceptuales cuando se hace click en Mis Mapas Conceptuales
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function cargarListadoMapa(){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$NumIdentidad = $_SESSION["NumIdentidad"];
-		$QueryMapasDocente=pg_query("SELECT id_mapa_conceptual as id, nombre_mapa as nombre, estado_mapa as estado, fecha_limite as feclim FROM mapa_conceptual WHERE usuario_id_usuario='".$NumIdentidad."';");
+		$QueryMapasDocente=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nombre, estadoMapa as estado, fechaLimite as feclim FROM mapaconceptual WHERE idUsuario='".$NumIdentidad."';",$components->getConnect());
 		if($QueryMapasDocente)
 		{
-			$NumMapasDocente=pg_num_rows($QueryMapasDocente);
+			$NumMapasDocente=  mysql_affected_rows($components->getConnect());
 			$Salida="<fieldset>";
 			$Salida.="<legend>Mis Mapas Conceptuales</legend>";
 			//menu superior
@@ -302,7 +311,7 @@
 			if($NumMapasDocente>0){
 				$Salida.="<tr><th align='left'>Nombre Mapa</th><th align='left'>Opciones</th><th align='left'>Fecha L&iacute;mite</th><th align='left'>Tipo Mapa</th></tr>";
 				//$Salida.="<tr>";
-				while($VectorMapas=pg_fetch_assoc($QueryMapasDocente)){
+				while($VectorMapas=  mysql_fetch_array($QueryMapasDocente)){
 					$Salida.="<tr>";
 					$Salida.="<td>";
 					if($VectorMapas["estado"]=="0"){
@@ -324,8 +333,9 @@
 					}
 					$Salida.="</td>";
 					$Salida.="<td><span id='Duracion_".$VectorMapas["id"]."'>".$VectorMapas["feclim"]."</span></td>";
-					$TipoMapa=pg_fetch_assoc(pg_query("SELECT tm.nombre_tipo_mapa as nom FROM tipo_mapa tm, mapa_conceptual mc 
-					WHERE tm.id_tipo_mapa=mc.tipo_mapa_id_tipo_mapa AND mc.id_mapa_conceptual='".$VectorMapas["id"]."'"));
+                                        $rs = $components->__executeQuery("SELECT tm.nombreTipoMapa as nom FROM tipomapa tm, mapaconceptual mc 
+					WHERE tm.idTipoMapa=mc.idTipoMapa AND mc.idMapaConceptual='".$VectorMapas["id"]."'",$components->getConnect());
+					$TipoMapa=  mysql_fetch_array($rs);
 					if($TipoMapa){
 						$Salida.="<td>".$TipoMapa["nom"]."</td>";
 					}
@@ -341,17 +351,17 @@
 			$Respuesta->addAssign("Contenido","innerHTML",$Salida);
 		}
 		else{
-			$Respuesta->addAlert("Hubo un error al cargar los mapas conceptuales. Intente de nuevo màs tarde");
+			$Respuesta->addAlert("Hubo un error al cargar los mapas conceptuales. Intente de nuevo mï¿½s tarde");
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction("cargarListadoMapa");
 	
 	/**
-	* Esta función se encarga de eliminar el mapa segun el docente
-	* @param integer $IdDocente Número de identificacion del docente
-	* @param integer $IdMapa Código del mapa
+	* Esta funciï¿½n se encarga de eliminar el mapa segun el docente
+	* @param integer $IdDocente Nï¿½mero de identificacion del docente
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function eliminarMapa($IdDocente,$IdMapa){
@@ -359,10 +369,10 @@
 		$Conexion=abrirConexion();
 		$Query="DELETE FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."' AND usuario_id_usuario='".$IdDocente."';";
 		if(!pg_query($Query)){
-			$Respuesta->addAlert("Hubo un error al eliminar el mapa. Inténtelo de nuevo más tarde.");
+			$Respuesta->addAlert("Hubo un error al eliminar el mapa. Intï¿½ntelo de nuevo mï¿½s tarde.");
 		}
 		else{
-			$Respuesta->addAlert("Mapa eliminado con éxito.");
+			$Respuesta->addAlert("Mapa eliminado con ï¿½xito.");
 			$Respuesta->addScriptCall("xajax_cargarListadoMapa");
 		}
 		cerrarConexion($Conexion);
@@ -371,12 +381,12 @@
 	$Xajax->registerFunction("eliminarMapa");
 	
 	/**
-	* Esta función se encarga de mostrar la interfaz para crear el mapa a traves del editor
+	* Esta funciï¿½n se encarga de mostrar la interfaz para crear el mapa a traves del editor
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function cargarEditorMapa(){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$Salida="<table width='100%' border='0' id='TablaInicial'>";
 		$Salida.="<tr id='Primero'>";
 		$Salida.="<td>";
@@ -422,44 +432,44 @@
 		<span id='formamatrices'></span>";
 		$Respuesta->addAssign("ContenidoMapa","innerHTML",$Salida);
 		$Respuesta->addScriptCall("xajax_cargarComboTematica","Tematica",'xajax_cargarEditorMapa','2');
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction("cargarEditorMapa");
 	
 	/**
-	* Esta función se encarga de una lista desplegable con las tematicas disponibles
+	* Esta funciï¿½n se encarga de una lista desplegable con las tematicas disponibles
 	* @param string $CampoDestino Campo HTML donde se va a mostrar la lista desplegable
-	* @param string $Funcion Cadena que contiene la funcion a la cual debe llamarse después de seleccionar la tematica
+	* @param string $Funcion Cadena que contiene la funcion a la cual debe llamarse despuï¿½s de seleccionar la tematica
 	* @param string $TipoCombo Cadena que contiene el tipo de combo segun como se vaya a mostrar la tematica
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function cargarComboTematica($CampoDestino,$Funcion,$TipoCombo){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		//Tematica
 		$Salida="<span id='CampoTematica'>";
 		$Salida.="<select name='TematicaMapa' id='TematicaMapa' onChange=\"cargarFormaTematica(this.value,'CampoTematica','".$Funcion."','".$TipoCombo."','".$CampoDestino."');\">";
 		$Salida.="<option value='0'>(Seleccione una tem&aacute;tica)</option>";
-		$QueryTematica=pg_query("SELECT id_tematica as id, nombre_tematica as nom FROM tematica");
+		$QueryTematica=$components->__executeQuery("SELECT idTematica as id, nombreTematica as nom FROM tematica",$components->getConnect());
 		if($QueryTematica){
-			if(pg_num_rows($QueryTematica)>0){
-				while($VecTematica=pg_fetch_assoc($QueryTematica)){
+			if(mysql_affected_rows($components->getConnect())>0){
+				while($VecTematica=  mysql_fetch_array($QueryTematica)){
 					$Salida.="<option value='".$VecTematica["id"]."@".$VecTematica["nom"]."'>".$VecTematica["nom"]."</option>";
 				}
 			}
 		}
-		$Salida.="<option value='-1'>[Agregar nueva temática...]</option>";
+		$Salida.="<option value='-1'>[Agregar nueva temï¿½tica...]</option>";
 		$Salida.="</select></span>";
 		$Respuesta->addAssign($CampoDestino,"innerHTML",$Salida);
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction("cargarComboTematica");
 	
 	/**
-	* Esta función se encarga de establecer el estado del mapa del docente
-	* @param integer $IdMapa Código del mapa
+	* Esta funciï¿½n se encarga de establecer el estado del mapa del docente
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @param integer $EstadoNuevo Estado nuevo del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
@@ -482,7 +492,7 @@
 	$Xajax->registerFunction('establecerEstadoMapa');
 	
 	/**
-	* Esta función se encarga de crear una lista desplegable de duracion
+	* Esta funciï¿½n se encarga de crear una lista desplegable de duracion
 	* @param string $Tipo Tipo de intervalo de tiempo
 	* @param string $Funcion Cadena que contiene una funcion 
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
@@ -530,7 +540,7 @@
 	$Xajax->registerFunction('comboDuracion');
 	
 	/**
-	* Esta función se encarga de crear una lista desplegable de duracion
+	* Esta funciï¿½n se encarga de crear una lista desplegable de duracion
 	* @param string $Tipo Tipo de intervalo de tiempo
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
@@ -573,11 +583,11 @@
 	$Xajax->registerFunction('comboDuracionMapas');
 	
 	/**
-	* Esta función se encarga de buscar hijos de un nodo o concepto padre
+	* Esta funciï¿½n se encarga de buscar hijos de un nodo o concepto padre
 	* @param string $Padre Codigo del nodo padre
 	* @param string $CadPad Cadena que contiene unlistado de los nodos padre 
 	* @param integer $NumPadre Id del nodo actual
-	* @param form $FormaMapa Formulario que contiene la información de todo el mapa conceptual
+	* @param form $FormaMapa Formulario que contiene la informaciï¿½n de todo el mapa conceptual
 	* @param integer $IdConceptoPadre Id del nodo actual
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
@@ -614,21 +624,21 @@
 	}
 
 	/**
-	* Esta función se encarga de recibir los datos del mapa creado en el editor
-	* @param form $FormaMapa Formulario que contiene la información de todo el mapa conceptual
-	* @param integer $IdMapa Código del mapa 
+	* Esta funciï¿½n se encarga de recibir los datos del mapa creado en el editor
+	* @param form $FormaMapa Formulario que contiene la informaciï¿½n de todo el mapa conceptual
+	* @param integer $IdMapa Cï¿½digo del mapa 
 	* @param integer $Indicador Valor que indica si el mapa es editado o creado por primera vez 
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function recibirDatosMapa($FormaMapa,$IdMapa,$Indicador){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		if($IdMapa!=null && $Indicador!=0){
-			$Conexion=abrirConexion();
-			$QueryMapa="DELETE FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';";
-			if(!pg_query($QueryMapa)){
-				$Respuesta->addAlert("Ha ocurrido un problema al editar el mapa. Intente de nuevo más tarde.");
+			$components=  getComponents();
+			$QueryMapa="DELETE FROM mapaConceptual WHERE idMapaConceptual='".$IdMapa."';";
+			if(!$components->__executeQuery($QueryMapa,$components->getConnect())){
+				$Respuesta->addAlert("Ha ocurrido un problema al editar el mapa. Intente de nuevo mï¿½s tarde.");
 			}
-			cerrarConexion($Conexion);
+			cerrarConexion($components->getConnect());
 		}
 		//datos recibidos desde el editor de mapas
 		$ValorRaiz=$FormaMapa["ValorRaiz"];
@@ -694,10 +704,10 @@
 		//--------------------------
 		$EstadoMapa=guardarMapaConceptual($GLOBALS["MatrizConcepto"],$InfoMapa,$ValorDuracion,$IdTematica);
 		if($EstadoMapa!="1"){
-			$Respuesta->addAlert("Hubo un error al guardar el mapa conceptual. Intente de nuevo màs tarde.");
+			$Respuesta->addAlert($EstadoMapa);
 		}
 		else{
-			$Respuesta->addAlert("Mapa conceptual creado con éxito.");
+			$Respuesta->addAlert("Mapa conceptual creado con ï¿½xito.");
 			$Respuesta->addScript("xajax_cargarListadoMapa();");
 		}
 		return $Respuesta;
@@ -705,34 +715,37 @@
 	$Xajax->registerFunction('recibirDatosMapa');
 	
 	/**
-	* Esta función se encarga de mostrar el mapa conceptual, sus conceptos y relaciones
-	* @param integer $IdMapa Código del mapa 
+	* Esta funciï¿½n se encarga de mostrar el mapa conceptual, sus conceptos y relaciones
+	* @param integer $IdMapa Cï¿½digo del mapa 
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function mostrarMapa($IdMapa){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		//informacion del concepto
-		$QueryConcepto=pg_query("SELECT id_concepto as id, nombre_concepto as nombre, texto_concepto as texto FROM concepto 
-		WHERE mapa_conceptual_id_mapa_conceptual='".$IdMapa."' AND id_concepto NOT LIKE	'%.%';");
+		$QueryConcepto=$components->__executeQuery("SELECT idConcepto as id, nombreConcepto as nombre, textoConcepto as texto FROM concepto 
+		WHERE idMapaConceptual='".$IdMapa."' AND idConcepto NOT LIKE	'%.%';",$components->getConnect());
 		if(!$QueryConcepto){
-			$Respuesta->addAlert("No se puede mostrar el mapa. Por favor, intente de nuevo màs tarde.");
+			$Respuesta->addAlert("No se puede mostrar el mapa. Por favor, intente de nuevo mï¿½s tarde.");
 		}
 		else{
-			$VectorConcepto=pg_fetch_assoc($QueryConcepto);
+			$VectorConcepto=  mysql_fetch_array($QueryConcepto);
 			//consulta que contiene todos los conceptos del mapa que sean padres
-			$QueryPadres=pg_query("SELECT DISTINCT concepto_id_concepto as id_padre FROM relacion 
-			WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."';");
+			$QueryPadres=$components->__executeQuery("SELECT DISTINCT idConcepto as id_padre FROM relacion 
+			WHERE idMapaConceptual='".$IdMapa."';",$components->getConnect());
 			if($QueryPadres){
-				if(pg_num_rows($QueryPadres)>0){
-					$CadenaPadres=implode(",",pg_fetch_all_columns($QueryPadres));
+				if(mysql_affected_rows($components->getConnect())>0){
+					$CadenaPadres=implode(",",  mysql_fetch_array($QueryPadres));
 				}
 				else{
 					$CadenaPadres="";
 				}
 			}
 			//informacion del mapa
-			$VecMapa=pg_fetch_assoc(pg_query("SELECT nombre_mapa as nombre, estado_mapa as estado, duracion_mapa as duracion FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';"));
+                        $query="SELECT nombreMapa as nombre, estadoMapa as estado, duracionMapa as duracion FROM mapaconceptual 
+                                WHERE idMapaConceptual=".$IdMapa.";";
+                        $response = $components->__executeQuery($query,$components->getConnect());
+                        $VecMapa=  mysql_fetch_array($response);
 			//cuadramos el intervalo y la duracion
 			if($VecMapa["duracion"]<24){
 				$d=$VecMapa["duracion"];
@@ -759,7 +772,9 @@
 			$Salida.="</td>";
 			$Salida.="</tr>";
 			//definimos tematica
-			$Tema=pg_fetch_array(pg_query("SELECT t.id_tematica as id, t.nombre_tematica as nom FROM tematica t, mapa_conceptual_tematica mct WHERE t.id_tematica=mct.tematica_id_tematica AND mct.mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;"));
+                        $sql ="SELECT t.idTematica as id, t.nombreTematica as nom FROM tematica t, mapaconceptualtematica mct WHERE t.idTematica=mct.idTematica AND mct.idMapaConceptual='".$IdMapa."' LIMIT 1;";
+                        $rs = $components->__executeQuery($sql,$components->getConnect());
+			$Tema=  mysql_fetch_array($rs);
 			$Salida.="<tr>";
 			$Salida.="<td>";
 			$Salida.="Tem&aacute;tica del mapa:&nbsp;<span id='Tematica'";
@@ -809,22 +824,22 @@
 			$Respuesta->addAssign("ContenidoMapa","innerHTML",$Salida);
 			$Respuesta->addScriptCall("xajax_mostrarHojasMapa",$IdMapa,$VecMapa["estado"],$VectorConcepto["id"],$CadenaPadres);
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('mostrarMapa');
 	
 	/**
-	* Esta función se encarga de transmitir los datos para mostrar los conceptos y relaciones del mapa
-	* @param integer $IdMapa Código del mapa 
+	* Esta funciï¿½n se encarga de transmitir los datos para mostrar los conceptos y relaciones del mapa
+	* @param integer $IdMapa Cï¿½digo del mapa 
 	* @param integer $EstadoMapa Valor que contiene el estado del mapa
-	* @param integer $IdConcepto Código del concepto 
+	* @param integer $IdConcepto Cï¿½digo del concepto 
 	* @param string $CadenaPadres Cadena que contiene el listado de los conceptos padre 
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function mostrarHojasMapa($IdMapa,$EstadoMapa,$IdConcepto,$CadenaPadres){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$VectorIdHijo=array("");
 		$VectorNomHijo=array("");
 		$VectorRelHijo=array("");
@@ -840,14 +855,15 @@
 				$CampoMenu="menu_".$NomenIdPadre;
 				$CampoInicial=$NomenIdPadre;
 			}
-			$QueryHijos=pg_query("SELECT id_concepto_hijo as id_hijo, nombre_relacion as relacion FROM relacion WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."' 
-			AND concepto_id_concepto='".$IdConcepto."';");
+			$QueryHijos=$components->__executeQuery("SELECT idConceptoHijo as id_hijo, nombreRelacion as relacion FROM relacion WHERE idMapaConceptual='".$IdMapa."' 
+			AND idConcepto='".$IdConcepto."';",$components->getConnect());
 			if($QueryHijos){
-				if(pg_num_rows($QueryHijos)>0){
-					while($Vector=pg_fetch_assoc($QueryHijos)){
-						$VecNomHijo=pg_fetch_assoc(pg_query("SELECT nombre_concepto as nomhijo FROM concepto WHERE 
-						mapa_conceptual_id_mapa_conceptual='".$IdMapa."' AND id_concepto='".$Vector["id_hijo"]."';"));
-						$VectorIdHijo[]=$Vector["id_hijo"];
+				if(mysql_affected_rows($components->getConnect())>0){
+					while($Vector=  mysql_fetch_array($QueryHijos)){
+                                                $sql ="SELECT nombreConcepto as nomhijo FROM concepto WHERE 
+						idMapaConceptual='".$IdMapa."' AND idConcepto='".$Vector["idHijo"]."';";
+						$VecNomHijo=  mysql_fetch_array($components->__executeQuery($sql, $components->getConnect()));
+                                                $VectorIdHijo[]=$Vector["id_hijo"];
 						$VectorNomHijo[]=$VecNomHijo["nomhijo"];
 						$VectorRelHijo[]=$Vector["relacion"];
 					}
@@ -860,7 +876,7 @@
 				}
 			}
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('mostrarHojasMapa');

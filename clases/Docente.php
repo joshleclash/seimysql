@@ -284,7 +284,7 @@
 	 */
 	function cargarFormaGrupo($NumDoc){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		$Salida="<form name='FormaGrupo'>";
 		$Salida.="<table>";
 		$Salida.="<tr>";
@@ -296,12 +296,12 @@
 		$Salida.="<tr>";
 		$Salida.="<td><b>Seleccione los mapas conceptuales asociados al grupo:</b></td>";
 		$Salida.="<td>";
-		$QueryMapa=pg_query("SELECT id_mapa_conceptual as id, nombre_mapa as nom FROM mapa_conceptual WHERE usuario_id_usuario='".$NumDoc."' AND estado_mapa='1';");
+		$QueryMapa=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDoc."' AND estado_mapa='1';",$components->getConnect());
 		$Num=0;
 		if($QueryMapa){
-			$Num=pg_num_rows($QueryMapa);
+			$Num= mysql_affected_rows($components->getConnect());
 			if($Num>0){
-				while($VecMapas=pg_fetch_assoc($QueryMapa)){
+				while($VecMapas=  mysql_fetch_array($QueryMapa)){
 					$Salida.="<input type='checkbox' name='".$VecMapas["id"]."' id='".$VecMapas["id"]."'>&nbsp;".$VecMapas["nom"]."<br>";
 				}
 			}
@@ -319,7 +319,7 @@
 		$Salida.="<input type='hidden' name='nummapas' id='nummapas' value='".$Num."'>";
 		$Salida.="</form>";
 		$Respuesta->addAssign("SpanGrupo","innerHTML",$Salida);
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('cargarFormaGrupo');
