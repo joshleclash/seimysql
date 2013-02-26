@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-02-2013 a las 02:26:20
+-- Tiempo de generación: 26-02-2013 a las 02:45:58
 -- Versión del servidor: 5.5.27
 -- Versión de PHP: 5.4.7
 
@@ -29,10 +29,10 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `concepto` (
   `idConcepto` int(11) NOT NULL AUTO_INCREMENT,
   `nombreConcepto` varchar(100) NOT NULL,
-  `texttoConcepto` text NOT NULL,
-  `idMapaConcetual` int(11) DEFAULT NULL,
+  `textoConcepto` text NOT NULL,
+  `idMapaConceptual` int(11) DEFAULT NULL,
   PRIMARY KEY (`idConcepto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
 
 -- --------------------------------------------------------
 
@@ -53,12 +53,6 @@ CREATE TABLE IF NOT EXISTS `grupo` (
   `nombreGrupo` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`idGrupo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Volcado de datos para la tabla `grupo`
---
-
-
 
 -- --------------------------------------------------------
 
@@ -164,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `mapaconceptual` (
   `fechaLimite` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `idMapaConceptual` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`idMapaConceptual`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -190,14 +184,6 @@ CREATE TABLE IF NOT EXISTS `perfil` (
   PRIMARY KEY (`idPerfil`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
---
--- Volcado de datos para la tabla `perfil`
---
-
-INSERT INTO `perfil` (`idPerfil`, `nombrePerfil`) VALUES
-(1, 'Docente'),
-(2, 'Estudiante');
-
 -- --------------------------------------------------------
 
 --
@@ -207,8 +193,8 @@ INSERT INTO `perfil` (`idPerfil`, `nombrePerfil`) VALUES
 CREATE TABLE IF NOT EXISTS `relacion` (
   `idMapaConceptual` int(11) DEFAULT NULL,
   `idConcepto` int(11) DEFAULT NULL,
-  `idConceptoHijo` int(11) DEFAULT NULL,
-  `nombreRelacion` varchar(200) DEFAULT NULL
+  `idConceptoHijo` int(11) NOT NULL,
+  `nombreRelacion` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -237,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `tematica` (
   `idTematica` int(11) NOT NULL AUTO_INCREMENT,
   `nombreTematica` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`idTematica`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -269,12 +255,6 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   PRIMARY KEY (`idUsuario`),
   KEY `usuario perfil` (`idPerfil`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-
 
 --
 -- Restricciones para tablas volcadas
