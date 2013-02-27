@@ -477,18 +477,18 @@
 	function establecerEstadoMapa($IdMapa, $EstadoNuevo)
 	{
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
-		$NumIdentidad = $_SESSION["NumIdentidad"];
-		$ActualizacionEstadoMapa="UPDATE mapa_conceptual SET estado_mapa = ".$EstadoNuevo." WHERE id_mapa_conceptual = ".$IdMapa.";";
-		if(!pg_query($ActualizacionEstadoMapa))
+		$components=  getComponents();
+		$NumIdentidad = $_SESSION["_User"]->identificacion;
+		$ActualizacionEstadoMapa="UPDATE mapaconceptual SET estadoMapa = ".$EstadoNuevo." WHERE idMapaConceptual = ".$IdMapa.";";
+		if(!$components->__executeQuery($ActualizacionEstadoMapa,$components->getConnect()))
 		{
 			$Respuesta->AddAlert("La actualizacion del estado del mapa fallo. Intente mas tarde.");
 		}
 		else{
 			$Respuesta->addScript("xajax_cargarListadoMapa();");
 		}
-		cerrarConexion($Conexion);
-		return $Respuesta;
+		cerrarConexion($components->getConnect());
+                return $Respuesta;
 	}
 	$Xajax->registerFunction('establecerEstadoMapa');
 	

@@ -112,7 +112,7 @@
 					FROM grupomapaconceptual gm, mapaconceptual mc 
 					WHERE gm.idGrupo='".$VectorGrupo["grupo"]."' 
 					AND mc.idMapaConceptual=gm.idMapa",$components->getConnect());
-					if($QueryMapas){
+                                        if(!$QueryMapas){
 						if(mysql_affected_rows($components->getConnect())>0){
 							$Salida.="<ul type='circle'>";
 							while($VecMapas=  mysql_fetch_array($QueryMapas)){
@@ -296,7 +296,7 @@
 		$Salida.="<tr>";
 		$Salida.="<td><b>Seleccione los mapas conceptuales asociados al grupo:</b></td>";
 		$Salida.="<td>";
-		$QueryMapa=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDoc."' AND estado_mapa='1';",$components->getConnect());
+		$QueryMapa=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDoc."' AND estadoMapa='1';",$components->getConnect());
 		$Num=0;
 		if($QueryMapa){
 			$Num= mysql_affected_rows($components->getConnect());
@@ -334,42 +334,49 @@
 	 */
 	function guardarGrupo($NumIdentidad,$Forma,$CadenaMapas){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		//buscamos primero si el nombre del grupo existe
-		$BuscarNombre=pg_query("SELECT nombre_grupo FROM grupo WHERE nombre_grupo = '".$Forma["NombreGrupo"]."' LIMIT 1");
+		$BuscarNombre=$components->__executeQuery("SELECT nombre_grupo FROM grupo WHERE nombreGrupo = '".$Forma["NombreGrupo"]."' LIMIT 1",$components->getConnect());
 		if($BuscarNombre){
-			if(pg_num_rows($BuscarNombre)>0){
+			if(mysql_affected_rows($components->getConnect())>0){
 				$Respuesta->addAlert("El nombre del grupo ya existe. Por favor, cambie el nombre del grupo.");
 			}
 			else{
-				$InsertarGrupo="INSERT INTO grupo VALUES('".$Forma["NombreGrupo"]."','".$Forma["DescGrupo"]."')";
-				if(!pg_query($InsertarGrupo))
+				$InsertarGrupo="INSERT INTO 
+                                                        grupo 
+                                                        (dscGrupo, smalldatetime, nombreGrupo) 
+                                                        VALUES
+                                                        ('".$Forma["DescGrupo"]."','".$components->getDate()."','".$Forma["NombreGrupo"]."')";
+                                //echo $InsertarGrupo;
+                                $insertRs = $components->__executeQuery($InsertarGrupo,$components->getConnect());
+				if(!$insertRs)
 				{
-					$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+					$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 				}
 				else
 				{
-					$QueryIdGrupo = "SELECT id_grupo FROM grupo ORDER BY id_grupo DESC LIMIT 1;";
-					$ResIdGrupo = pg_query($QueryIdGrupo);
+					$QueryIdGrupo = "SELECT idGrupo FROM grupo ORDER BY idGrupo DESC LIMIT 1;";
+					$ResIdGrupo = $components->__executeQuery($QueryIdGrupo,$components->getConnect());
 					if($ResIdGrupo)
 					{
-						$VecIdGrupo = pg_fetch_array($ResIdGrupo);
+						$VecIdGrupo = mysql_fetch_array($ResIdGrupo);
 						$IdGrupo = $VecIdGrupo[0];
-						$ResultadoQueryDos=pg_query("INSERT INTO grupo_usuario VALUES(".$IdGrupo.",".$NumIdentidad.")");
+						$ResultadoQueryDos=$components->__executeQuery("INSERT INTO grupousuario (idGrupo,idUsuario) VALUES (".$IdGrupo.",".$NumIdentidad.");",$components->getConnect());
 						if(!$ResultadoQueryDos){
-							$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+							$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 						}
 						else{
 							$Ind=true;
 							$VecMapas=explode(",",$CadenaMapas);
 							foreach($VecMapas as $vm){
-								$ResultadoQueryTres=pg_query("INSERT INTO grupo_mapa_conceptual VALUES('".$vm."','".$IdGrupo."')");
+                                                                //JUAN RUSSI $ResultadoQueryTres=$components->__executeQuery("INSERT INTO grupo_mapa_conceptual VALUES('".$vm."','".$IdGrupo."')",$components->getConnect());
+								$ResultadoQueryTres=$components->__executeQuery("INSERT INTO grupomapausuario (idMapaConceptual, idGrupo) VALUES (".$vm.",".$IdGrupo.")",$components->getConnect());
 								if(!$ResultadoQueryTres){
 									$Ind=false;
 								}
 							}
 							if($Ind==false){
-								$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+								$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 							}
 							else{
 								$Respuesta->addAlert("Grupo creado con �xito");
@@ -380,12 +387,12 @@
 					}
 					else
 					{
-						$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+						$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_errno($components->getConnect()));
 					}
 				}
 			}
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('guardarGrupo');
@@ -690,7 +697,7 @@
 	 */
 	function guardarTiempoMapa($Forma,$IdCampo,$IdMapa,$Estado){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion = abrirConexion();
+		$components = getComponents();
 		if($Forma["TipoTiempoMap"]!="0"){
 			//pasamos el tiempo a segundos
 			switch($Forma["TipoTiempoMap"]){
@@ -708,8 +715,8 @@
 			//ahora aumentamos la fecha de hoy segun ese tiempo
 			$Hoy=strtotime(date("Y-m-d H:i:s"));
 			$FechaTotal=date("Y-m-d H:i:s",$Hoy+$Tiempo);
-			$Query="UPDATE mapa_conceptual SET fecha_limite='".$FechaTotal."' WHERE id_mapa_conceptual='".$IdMapa."';";
-			if(!pg_query($Query)){
+			$Query="UPDATE mapaConceptual SET fechaLimite='".$FechaTotal."' WHERE idMapaConceptual='".$IdMapa."';";
+			if(!$components->__executeQuery($Query,$components->getConnect())){
 				$Respuesta->addAlert("Duracion no actualizada. Intente de nuevo mas tarde.");
 			}
 			else{
@@ -720,7 +727,7 @@
 		else{
 			$Respuesta->addAlert("Debe definir el tiempo");
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('guardarTiempoMapa');
