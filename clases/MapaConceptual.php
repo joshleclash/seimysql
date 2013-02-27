@@ -120,7 +120,7 @@
 	*/
 	function guardarMapaConceptual($Concepto,$InfoGeneralConcepto,$Duracion,$Tematica)
         {
-            
+                return $InfoGeneralConcepto;
 		$components=  getComponents();
 		if($components!=false)
 		{
@@ -133,7 +133,7 @@
 			$ResultadoIdMP=$components->__executeQuery($ConsultaIdMP,$components->getConnect());   
 			if(mysql_affected_rows($components->getConnect())==0)
 			{
-                            
+                                
 				$InsercionMP="INSERT INTO mapaconceptual
                                                 (idUsuario, idTipoMapa, nombreMapa, totalConceptos, totalRelaciones, estadoMapa, duracionMapa, fechaInicio, fechaLimite)
                                                 VALUES (".$NumIdentidad.",".$InfoGeneralConcepto['TipoMapa'].",'".$InfoGeneralConcepto['NombreMapa']."',".$InfoGeneralConcepto['Conceptos'].",".$InfoGeneralConcepto['Relaciones'].",'".$InfoGeneralConcepto['EstadoMapa']."','".$Duracion."','".$Today."','".$DateLimit."');";
@@ -152,7 +152,8 @@
                                                 (nombreConcepto, textoConcepto, idMapaConceptual)     
                                                 VALUES('".trim($Vector['NomConcepto'])."',
 						'".trim($Vector['NumConcepto'])."',".$IdMP['idMapaConceptual'].")";
-						if(!$components->__executeQuery($InsercionConcepto,$components->getConnect()))
+                                                $resultConcepto = $components->__executeQuery($InsercionConcepto,$components->getConnect());
+                                                if(!$resultConcepto)
 						{
 							return "Insercion a concepto fallo.";
 						}
@@ -290,7 +291,7 @@
 	function cargarListadoMapa(){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		$components=  getComponents();
-		$NumIdentidad = $_SESSION["NumIdentidad"];
+		$NumIdentidad = $_SESSION["_User"]->identificacion;
 		$QueryMapasDocente=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nombre, estadoMapa as estado, fechaLimite as feclim FROM mapaconceptual WHERE idUsuario='".$NumIdentidad."';",$components->getConnect());
 		if($QueryMapasDocente)
 		{

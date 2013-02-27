@@ -299,34 +299,34 @@ function mostrarGrafica($NumDocente,$TipoGrafica,$IdGrupo,$IdMapa,$IdEstudiante=
 				$VecSerieVertical[]=$i;
 			}*/
 			//horizontal
-			$Mapas=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDocente."' ORDER BY id",$components->getConnect());
+			$Mapas=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDocente."' ORDER BY id asc",$components->getConnect());
 			if($Mapas){
 				if(mysql_affected_rows($components->getConnect())>0){
-					while($vm=pg_fetch_assoc($Mapas)){
+					while($vm=  mysql_fetch_array($Mapas)){
 						$VecSerieHorizontal[]=$vm["id"]."@".ucwords(strtolower($vm["nom"]));
 					}
 					$ContGrupos=0;
 					//primero debo buscar todos los grupos para medir su rendimiento
-					$QueryGrupos=pg_query("SELECT id_grupo as id, nombre_grupo as nom FROM grupo WHERE id_grupo IN (SELECT grupo_id_grupo FROM grupo_usuario WHERE usuario_id_usuario='".$NumDocente."') ORDER BY id");
+					$QueryGrupos=$components->__executeQuery("SELECT idGrupo as id, nombreGrupo as nom FROM grupo WHERE idGrupo IN (SELECT idGrupo FROM grupoUsuario WHERE idUsuario='".$NumDocente."') ORDER BY id",$components->getConnect());
 					if($QueryGrupos){
-						$NumGrupos=pg_num_rows($QueryGrupos);
+						$NumGrupos=  mysql_affected_rows($components->getConnect());
 						if($NumGrupos>0){
-							while($VecGrupos=pg_fetch_assoc($QueryGrupos)){
+							while($VecGrupos=  mysql_fetch_array($QueryGrupos)){
 								$VecLineas[$ContGrupos]=$VecGrupos["id"]."@".ucwords(strtolower($VecGrupos["nom"]));
 								//ahora buscamos los mapas de ese grupo
-								$QueryMapas=pg_query("SELECT id_mapa_conceptual as idmapa, nombre_mapa as mapa FROM mapa_conceptual WHERE id_mapa_conceptual IN (SELECT mapa_conceptual_id_mapa FROM grupo_mapa_conceptual WHERE grupo_id_grupo='".$VecGrupos["id"]."')");
+								$QueryMapas=$components->__executeQuery("SELECT idMapaConceptual as idmapa, nombreMapa as mapa FROM mapaconceptual WHERE idMapaConceptual IN (SELECT idMapa FROM grupomapaconceptual WHERE idGrupo='".$VecGrupos["id"]."')");
 								if($QueryMapas){
-									$NumMapas=pg_num_rows($QueryMapas);
+									$NumMapas=  mysql_fetch_array($QueryMapas);
 									if($NumMapas>0){
 										$ContMapas=0;
-										while($VecMapas=pg_fetch_assoc($QueryMapas)){
+										while($VecMapas=  mysql_fetch_array($QueryMapas)){
 											$Promedio=0;
 											//ahora traemos los resultados de cada mapa de la tabla historial_juego_respuesta
-											$QueryRes=pg_query("SELECT respuestas_acertadas as rtas FROM historial_juego_respuesta WHERE juego_mapa_mapa_conceptual_id_mapa_conceptual='".$VecMapas["idmapa"]."' AND usuario_id_usuario IN (SELECT usuario_id_usuario FROM grupo_usuario WHERE grupo_id_grupo='".$VecGrupos["id"]."' AND usuario_id_usuario <> '".$NumDocente."')");
+											$QueryRes=$components->__executeQuery("SELECT respuestasAcertadas as rtas FROM historialjuegorespuesta WHERE idMapaConceptual='".$VecMapas["idmapa"]."' AND usuario_id_usuario IN (SELECT usuario_id_usuario FROM grupo_usuario WHERE grupo_id_grupo='".$VecGrupos["id"]."' AND usuario_id_usuario <> '".$NumDocente."')",$components->getConnect());
 											if($QueryRes){
-												$NumRtas=pg_num_rows($QueryRes);
+												$NumRtas=  mysql_affected_rows($components->getConnect());
 												if($NumRtas>0){
-													while($VecRtas=pg_fetch_assoc($QueryRes)){
+													while($VecRtas=  mysql_fetch_array($QueryRes)){
 														$vr=explode("/",$VecRtas["rtas"]);
 														$Promedio+=floor(($vr[0]/$vr[1])*100);
 													}
