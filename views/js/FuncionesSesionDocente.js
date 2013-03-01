@@ -77,7 +77,7 @@ function verificarClaves(){
 		}
 		else{
 			if(ClaveUno.value!=ClaveDos.value){
-				alert("La clave de confirmación no coincide con la digitada. Por favor, verifique e intente de nuevo.");
+				alert("La clave de confirmaciï¿½n no coincide con la digitada. Por favor, verifique e intente de nuevo.");
 				ClaveUno.value="";
 				ClaveDos.value="";
 				ClaveUno.focus();
@@ -95,7 +95,7 @@ function noNumeros(Evento)
 	Tecla = (document.all) ? Evento.keyCode : Evento.which;
     if (Tecla==0) return true;
 	if (Tecla==8) return true;
-	Patron =/[a-zA-ZÑñÁÉÍÓÚáéíóú\s]/;
+	Patron =/[a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\s]/;
     Te = String.fromCharCode(Tecla);
     return Patron.test(Te);
 }
@@ -122,23 +122,23 @@ function correoPermitido(Evento){
 function validarRegistroEst(Formulario){
 	var Filtro = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	if(Formulario.IdUsuario.value.length==0){
-		alert("Asegúrese de ingresar el Documento de Identidad del Estudiante.");
+		alert("Asegï¿½rese de ingresar el Documento de Identidad del Estudiante.");
 		Formulario.IdUsuario.focus();
 	}
 	else if(Formulario.NombreUsuario.value.length==0){
-		alert("Asegúrese de ingresar los Nombres del Estudiante.");
+		alert("Asegï¿½rese de ingresar los Nombres del Estudiante.");
 		Formulario.NombreUsuario.focus();
 	}
 	else if(Formulario.ApellidoUsuario.value.length==0){
-		alert("Asegúrese de ingresar los Apellidos del Estudiante.");
+		alert("Asegï¿½rese de ingresar los Apellidos del Estudiante.");
 		Formulario.ApellidoUsuario.focus();
 	}
 	else if(Formulario.CorreoUsuario.value.length==0){
-		alert("Asegúrese de ingresar el Correo del Estudiante.");
+		alert("Asegï¿½rese de ingresar el Correo del Estudiante.");
 		Formulario.CorreoUsuario.focus();
 	}
 	else if(!Filtro.test(Formulario.CorreoUsuario.value)){
-		alert("Asegúrese de ingresar un Correo válido.\nEj: nombre@dominio.com");
+		alert("Asegï¿½rese de ingresar un Correo vï¿½lido.\nEj: nombre@dominio.com");
 		Formulario.CorreoUsuario.focus();
 	}
 	else{
@@ -241,7 +241,7 @@ function validarFormaMapa(Forma){
 	}
 	else{
 		if(Forma.TematicaMapa.value=="0"){
-			alert("Por favor, seleccione un temática para subir.");	
+			alert("Por favor, seleccione un temï¿½tica para subir.");	
 		}
 		else
 		{
@@ -268,12 +268,12 @@ function validarFormaMapa(Forma){
 
 function confirmarActivacionMapa(id,estado,letrero){
 	if(letrero==1){
-		textoletrero="\n\nADVERTENCIA:\nSi hace click en Aceptar, NO PODRÁ VOLVER A EDITAR EL MAPA CONCEPTUAL.\nSi aún desea hacer cambios en el mapa, haga click en Cancelar.";
+		textoletrero="\n\nADVERTENCIA:\nSi hace click en Aceptar, NO PODRï¿½ VOLVER A EDITAR EL MAPA CONCEPTUAL.\nSi aï¿½n desea hacer cambios en el mapa, haga click en Cancelar.";
 	}
 	else{
 		textoletrero="";
 	}
-	if(confirm("¿Está seguro de querer activar el mapa?"+textoletrero)==true){
+	if(confirm("ï¿½Estï¿½ seguro de querer activar el mapa?"+textoletrero)==true){
 		if(letrero!=1){
 			mostrarCombosTiempoMap('Duracion_'+id,id,estado);
 		}
@@ -284,25 +284,25 @@ function confirmarActivacionMapa(id,estado,letrero){
 }
 
 function confirmarDesactivacionMapa(id,estado){
-	if(confirm("¿Está seguro de querer desactivar el mapa?")==true){
+	if(confirm("ï¿½Estï¿½ seguro de querer desactivar el mapa?")==true){
 		xajax_establecerEstadoMapa(id,estado);
 	}
 }
 
 function confirmarEliminarGrupo(documento,grupo){
-	if(confirm("¿Está seguro de eliminar el grupo?\n\nADVERTENCIA: Si hace click en Aceptar, SE ELIMINARAN TODOS LOS ESTUDIANTES RELACIONADOS CON EL GRUPO SELECCIONADO.\nSi no está seguro, haga click en Cancelar")==true){
+	if(confirm("ï¿½Estï¿½ seguro de eliminar el grupo?\n\nADVERTENCIA: Si hace click en Aceptar, SE ELIMINARAN TODOS LOS ESTUDIANTES RELACIONADOS CON EL GRUPO SELECCIONADO.\nSi no estï¿½ seguro, haga click en Cancelar")==true){
 		xajax_eliminarGrupo(documento,grupo);
 	}
 }
 
 function confirmarEliminarEstudiante(documento,grupo,docente){
-	if(confirm("¿Está seguro de eliminar este estudiante?")==true){
+	if(confirm("ï¿½Estï¿½ seguro de eliminar este estudiante?")==true){
 		xajax_eliminarEstudiante(documento,grupo,docente);
 	}
 }
 
 function confirmarEliminarMapa(documento,grupo){
-	if(confirm("¿Está seguro de eliminar el mapa?")==true){
+	if(confirm("ï¿½Estï¿½ seguro de eliminar el mapa?")==true){
 		xajax_eliminarMapa(documento,grupo);
 	}
 }

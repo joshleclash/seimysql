@@ -18,7 +18,7 @@ class Components{
         mysql_select_db($this->dbName, $this->conect);
     }
     public function __executeQuery($query=null,$conect=null){
-        $rs = mysql_query($query,$conect);
+        $rs = mysql_query($query,@$conect);
         if($rs==false)
             {
                   return $this->error . "-" . mysql_error();
