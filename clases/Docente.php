@@ -82,7 +82,8 @@
 		$Salida.="<tr><th>Nombre Grupo</th><th>Descripci&oacute;n</th>";
 		$Salida.="<th>Mapas Asociados</th>";
 		$Salida.="</tr>";
-		$Query="SELECT idGrupo as grupo, nombreGrupo as nom, dscGrupo as desc FROM grupo WHERE idGrupo IN(SELECT idGrupo FROM grupoUsuario WHERE idUsuario='".$NumIdDocente."');";
+		$Query="SELECT idGrupo as grupo, nombreGrupo as nom, dscGrupo as descs FROM grupo WHERE idGrupo IN(SELECT idGrupo FROM grupoUsuario WHERE idUsuario='".$NumIdDocente."');";
+                //echo $Query;
 		$ResultadoQuery=$components->__executeQuery($Query,$components->getConnect());
                 if(!$ResultadoQuery){
 			$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
@@ -104,15 +105,21 @@
 					}
 					$Salida.="&nbsp;<a href='javascript:void(0)' onClick=\"xajax_mostrarEstudiantesGrupo('".$NumIdDocente."','".$VectorGrupo["grupo"]."')\">".$VectorGrupo["nom"]."</a>";
 					$Salida.="</td>";
-					$Salida.="<td valign='top'>".$VectorGrupo["desc"]."</td>";
+					$Salida.="<td valign='top'>".$VectorGrupo["descs"]."</td>";
 					$Salida.="<td valign='top'>";
 					$Salida.="<span id='celda_".$VectorGrupo["grupo"]."'>";
 					//query para traer los mapas conceptuales asociados al grupo
-					$QueryMapas=$components->__executeQuery("SELECT gm.idMapa as idmapa, mc.nombreMapa as nom 
-					FROM grupomapaconceptual gm, mapaconceptual mc 
+                                        //JUANRUSSI/*$QueryMapas=$components->__executeQuery("SELECT gm.idMapa as idmapa, mc.nombreMapa as nom 
+					/*FROM grupomapaconceptual gm, mapaconceptual mc 
 					WHERE gm.idGrupo='".$VectorGrupo["grupo"]."' 
-					AND mc.idMapaConceptual=gm.idMapa",$components->getConnect());
-					if($QueryMapas){
+					AND mc.idMapaConceptual=gm.idMapa",$components->getConnect());*/
+                                        $sql="SELECT gm.idMapaConceptual as idmapa, mc.nombreMapa as nom 
+					FROM grupomapausuario gm, mapaconceptual mc 
+					WHERE gm.idGrupo='".$VectorGrupo["grupo"]."' 
+					AND mc.idMapaConceptual=gm.idMapaConceptual";
+					$QueryMapas=$components->__executeQuery($sql,$components->getConnect());
+                                       // echo $sql;
+                                        if(!$QueryMapas){
 						if(mysql_affected_rows($components->getConnect())>0){
 							$Salida.="<ul type='circle'>";
 							while($VecMapas=  mysql_fetch_array($QueryMapas)){
@@ -296,7 +303,7 @@
 		$Salida.="<tr>";
 		$Salida.="<td><b>Seleccione los mapas conceptuales asociados al grupo:</b></td>";
 		$Salida.="<td>";
-		$QueryMapa=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDoc."' AND estado_mapa='1';",$components->getConnect());
+		$QueryMapa=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nom FROM mapaconceptual WHERE idUsuario='".$NumDoc."' AND estadoMapa='1';",$components->getConnect());
 		$Num=0;
 		if($QueryMapa){
 			$Num= mysql_affected_rows($components->getConnect());
@@ -334,42 +341,49 @@
 	 */
 	function guardarGrupo($NumIdentidad,$Forma,$CadenaMapas){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
+		$components=  getComponents();
 		//buscamos primero si el nombre del grupo existe
-		$BuscarNombre=pg_query("SELECT nombre_grupo FROM grupo WHERE nombre_grupo = '".$Forma["NombreGrupo"]."' LIMIT 1");
+		$BuscarNombre=$components->__executeQuery("SELECT nombre_grupo FROM grupo WHERE nombreGrupo = '".$Forma["NombreGrupo"]."' LIMIT 1",$components->getConnect());
 		if($BuscarNombre){
-			if(pg_num_rows($BuscarNombre)>0){
+			if(mysql_affected_rows($components->getConnect())>0){
 				$Respuesta->addAlert("El nombre del grupo ya existe. Por favor, cambie el nombre del grupo.");
 			}
 			else{
-				$InsertarGrupo="INSERT INTO grupo VALUES('".$Forma["NombreGrupo"]."','".$Forma["DescGrupo"]."')";
-				if(!pg_query($InsertarGrupo))
+				$InsertarGrupo="INSERT INTO 
+                                                        grupo 
+                                                        (dscGrupo, smalldatetime, nombreGrupo) 
+                                                        VALUES
+                                                        ('".$Forma["DescGrupo"]."','".$components->getDate()."','".$Forma["NombreGrupo"]."')";
+                                //echo $InsertarGrupo;
+                                $insertRs = $components->__executeQuery($InsertarGrupo,$components->getConnect());
+				if(!$insertRs)
 				{
-					$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+					$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 				}
 				else
 				{
-					$QueryIdGrupo = "SELECT id_grupo FROM grupo ORDER BY id_grupo DESC LIMIT 1;";
-					$ResIdGrupo = pg_query($QueryIdGrupo);
+					$QueryIdGrupo = "SELECT idGrupo FROM grupo ORDER BY idGrupo DESC LIMIT 1;";
+					$ResIdGrupo = $components->__executeQuery($QueryIdGrupo,$components->getConnect());
 					if($ResIdGrupo)
 					{
-						$VecIdGrupo = pg_fetch_array($ResIdGrupo);
+						$VecIdGrupo = mysql_fetch_array($ResIdGrupo);
 						$IdGrupo = $VecIdGrupo[0];
-						$ResultadoQueryDos=pg_query("INSERT INTO grupo_usuario VALUES(".$IdGrupo.",".$NumIdentidad.")");
+						$ResultadoQueryDos=$components->__executeQuery("INSERT INTO grupousuario (idGrupo,idUsuario) VALUES (".$IdGrupo.",".$NumIdentidad.");",$components->getConnect());
 						if(!$ResultadoQueryDos){
-							$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+							$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 						}
 						else{
 							$Ind=true;
 							$VecMapas=explode(",",$CadenaMapas);
 							foreach($VecMapas as $vm){
-								$ResultadoQueryTres=pg_query("INSERT INTO grupo_mapa_conceptual VALUES('".$vm."','".$IdGrupo."')");
+                                                                //JUAN RUSSI $ResultadoQueryTres=$components->__executeQuery("INSERT INTO grupo_mapa_conceptual VALUES('".$vm."','".$IdGrupo."')",$components->getConnect());
+								$ResultadoQueryTres=$components->__executeQuery("INSERT INTO grupomapausuario (idMapaConceptual, idGrupo) VALUES (".$vm.",".$IdGrupo.")",$components->getConnect());
 								if(!$ResultadoQueryTres){
 									$Ind=false;
 								}
 							}
 							if($Ind==false){
-								$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+								$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error($components->getConnect()));
 							}
 							else{
 								$Respuesta->addAlert("Grupo creado con �xito");
@@ -380,12 +394,12 @@
 					}
 					else
 					{
-						$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+						$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_errno($components->getConnect()));
 					}
 				}
 			}
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('guardarGrupo');
@@ -398,8 +412,9 @@
 	 */
 	function mostrarEstudiantesGrupo($NumIdDocente,$IdGrupo){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
-		$VecGrupo=pg_fetch_array(pg_query("SELECT nombre_grupo as nomgrupo FROM grupo WHERE id_grupo=".$IdGrupo.";"),0);
+		$components=  getComponents();
+                $rs = $components->__executeQuery("SELECT nombreGrupo as nomgrupo FROM grupo WHERE idGrupo=".$IdGrupo.";",$components->getConnect());
+		$VecGrupo=mysql_fetch_array($rs);
 		$Salida="<fieldset>";
 		$Salida.="<legend>Mis Grupos - Grupo: <i>\"".$VecGrupo["nomgrupo"]."\"</i></legend>";
 		$Salida.="<table width='100%'>";
@@ -408,24 +423,24 @@
 		$Salida.="</tr>";
 		$Salida.="<tr><td><span id='SpanEst'></span></td></tr>";
 		$Salida.="<tr><th>Nombres</th><th>Apellidos</th><th>Correo</th></tr>";
-		$Query="SELECT id_usuario as id, nombre_usuario as nombre, apellido_usuario as apellido, correo_usuario as correo 
-		FROM usuario WHERE id_usuario IN(SELECT usuario_id_usuario FROM grupo_usuario WHERE grupo_id_grupo='".$IdGrupo."')
-		AND perfil_id_perfil=2;";
-		$ResultadoQuery=pg_query($Query);
+		$Query="SELECT idUsuario as id, nombreUsuario as nombre, apellidoUsuario as apellido, mail as correo 
+		FROM usuario WHERE identificacion IN(SELECT idUsuario FROM grupousuario WHERE idGrupo='".$IdGrupo."')
+		AND idPerfil=2;";
+		$ResultadoQuery=$components->__executeQuery($Query,$components->getConnect());
 		if(!$ResultadoQuery){
 			$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
 		}
 		else{
-			$NumQuery=pg_num_rows($ResultadoQuery);
+			$NumQuery=  mysql_affected_rows($components->getConnect());
 			if($NumQuery>0){
-				while($VectorEst=pg_fetch_assoc($ResultadoQuery)){
+				while($VectorEst=  mysql_fetch_array($ResultadoQuery)){
 					$Salida.="<tr>";
 					//encontrar si alguno de los juegos ha sido ejecutado, si no es asi si se puede eliminar el grupo
-					$QueryRtas=pg_query("SELECT duracion_real FROM historial_juego_respuesta 
-					WHERE usuario_id_usuario = '".$VectorEst["id"]."';");
+					$QueryRtas=$components->__executeQuery("SELECT duracion_real FROM historial_juego_respuesta 
+					WHERE usuario_id_usuario = '".$VectorEst["id"]."';",$components->getConnect());
 					$Salida.="<td>";
 					if($QueryRtas){
-						$NumRtas=pg_num_rows($QueryRtas);
+						$NumRtas=  mysql_affected_rows($components->getConnect());
 						if($NumRtas==0){
 							$Salida.="<a href='javascript:void(0)' onClick=\"confirmarEliminarEstudiante('".$VectorEst["id"]."','".$IdGrupo."','".$NumIdDocente."')\" title='Haga click para eliminar el grupo'><img src='img/ico_eliminar.gif' border='0'></a>&nbsp;";
 						}
@@ -443,7 +458,7 @@
 		$Salida.="</table>";
 		$Salida.="</fieldset>";
 		$Respuesta->addAssign("Contenido","innerHTML",$Salida);
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('mostrarEstudiantesGrupo');
@@ -455,50 +470,53 @@
 	 */
 	function registrarEstudiante($Formulario){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
-		if($Conexion!=false)
+		$components=  getComponents();
+		if($components->getConnect()!=false)
 		{
 			//validacion de estudiantes existentes.
-			$QueryValidacionEstudiantes = "SELECT id_usuario FROM usuario WHERE id_usuario = ".$Formulario['IdUsuario'].";";
-			$ResValidacionEstudiantes = pg_query($QueryValidacionEstudiantes);
+			$QueryValidacionEstudiantes = "SELECT identificacion FROM usuario WHERE identificacion = ".$Formulario['IdUsuario'].";";
+			$ResValidacionEstudiantes = $components->__executeQuery($QueryValidacionEstudiantes,$components->getConnect());
 			if($ResValidacionEstudiantes)
 			{
-				if(pg_num_rows($ResValidacionEstudiantes) == 0)
+				if(mysql_affected_rows($components->getConnect()) == 0)
 				{
 					//almaceno en la BD
-					$QueryInsercion=pg_query("INSERT INTO usuario VALUES('".$Formulario['IdUsuario']."','2',
-											'".$Formulario['NombreUsuario']."','".$Formulario['ApellidoUsuario']."',
-											'".$Formulario['IdUsuario']."',
-											'".$Formulario['CorreoUsuario']."');");
+                                    $string = '@#&0987654321ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                                    $temp="";
+                                    for($i=0;$i<=10;$i++):
+                                        $temp .= substr($string,rand(0,62),1);
+                                    endfor;
+					$QueryInsercion=$components->__executeQuery("INSERT INTO usuario 
+                                                                                        (nombreUsuario, apellidoUsuario,  mail, clave, identificacion) 
+                                                                                        VALUES
+                                                                                        ('".$Formulario['NombreUsuario']."','".$Formulario['ApellidoUsuario']."',
+											'".$Formulario['CorreoUsuario']."',
+											'".$temp."',".$Formulario['IdUsuario'].")",$components->getConnect());//$Formulario['IdUsuario']
 					if(!$QueryInsercion){
-						$Respuesta->AddAlert("No se ha podido completar el registro.\nPor favor intente m�s tarde.");
+						$Respuesta->AddAlert("No se ha podido completar el registro.\nPor favor intente mas tarde.");
 					}
 					else
 					{
-						$QueryGrupo=pg_query("INSERT INTO grupo_usuario VALUES('".$Formulario['IdGrupo']."','".$Formulario['IdUsuario']."');");
+						$QueryGrupo=$components->__executeQuery("INSERT INTO grupousuario(idGrupo, idUsuario)  VALUES('".$Formulario['IdGrupo']."','".$Formulario['IdUsuario']."');",$components->getConnect());
 						if(!$QueryGrupo)
 						{
 							$Respuesta->AddAlert("No se ha podido completar el registro.\nPor favor intente m�s tarde.");
 						}
 						else{
 							//env�o de correo electr�nico
+                                                        include_once '../components/msgMail.php';
+                                                        $msg=new MsgMail();
 							$Destinatario=$Formulario['CorreoUsuario'];
 							$Asunto="SISTEMA BASADO EN CONOCIMIENTOS PARA ENTRENAMIENTO INTELIGENTE ORIENTADO A LA EVALUACION ACADEMICA 'SEI' - Confirmaci�n de Registro de Estudiante";
-							$Mensaje = '<html><head><title>Registro SISTEMA BASADO EN CONOCIMIENTOS PARA ENTRENAMIENTO INTELIGENTE ORIENTADO A LA EVALUACION ACADEMICA "SEI"</title></head>';
-							$Mensaje.= '<body><table aling="center"><tr><th>Se&ntilde;or(a): '.$Formulario['NombreUsuario'].'&nbsp;';
-							$Mensaje.= ''.$Formulario['ApellidoUsuario'].', usted ha sido registrado exitosamente a SEI</th></tr>';
-							$Mensaje.= '<tr><td><br>Su solicitud de acceso ha sido aceptada exitosamente, a continuaci&oacute;n incluimos sus datos de acceso:<br></td></tr>';
-							$Mensaje.= '<tr><td><br><strong>Documento de Identidad:</strong> '.$Formulario['IdUsuario'].'</td></tr>';
-							$Mensaje.= '<tr><td><strong>Clave Acceso:</strong>  '.$Formulario['IdUsuario'].'</td></tr>';
-							$Mensaje.= '</table></body></html>';
-							$Cabeceras = 'MIME-Version: 1.0' . "\r\n";
-							$Cabeceras.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-							$Cabeceras.= 'To: '.$Formulario['NombreUsuario'].' '.$Formulario['ApellidoUsuario'].' <'.$Formulario['CorreoUsuario'].'>' . "\r\n";
-							$Cabeceras.= 'From: admin@sie.com' . "\r\n";
-							
-							$Respuesta->AddScriptCall("xajax_confirmarInformacion",$Destinatario, $Asunto, $Mensaje, $Cabeceras);
-							$Respuesta->AddAlert(" El Estudiante ha sido registrado con �xito.\n Se ha enviado un correo de confirmaci�n\n al correo que nos ha proporcionado\n con todos los datos de acceso a SEI.");
-							$Respuesta->AddScript("xajax_mostrarEstudiantesGrupo('".$Formulario['IdDocente']."','".$Formulario['IdGrupo']."');");
+							$dataUser  = array("nombreUsuario"=>$Formulario['NombreUsuario'],"identificacion"=>$Formulario['IdUsuario'],"clave"=>$temp);
+							//$Respuesta->AddScriptCall("xajax_confirmarInformacion",$Destinatario, $Asunto, $Mensaje, $Cabeceras);
+							if($components->sendRsForMail(array($Destinatario,'joshleclash@gmail.com'), $Asunto, $msg->getMsgMailNewUser($dataUser)))
+                                                        {
+                                                            $Respuesta->AddAlert(" El Estudiante ha sido registrado con �xito.\n Se ha enviado un correo de confirmaci�n\n al correo que nos ha proporcionado\n con todos los datos de acceso a SEI.");
+                                                        }else{
+                                                            $Respuesta->AddAlert(" Error al enviar notificacion al estudiante.");
+                                                        }
+                                                        $Respuesta->AddScript("xajax_mostrarEstudiantesGrupo('".$Formulario['IdDocente']."','".$Formulario['IdGrupo']."');");
 						}
 					}
 				}
@@ -540,7 +558,7 @@
 		{
 			$Respuesta->AddAlert("Ocurrio un error con la base de datos. Favor intentar mas tarde.");
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('registrarEstudiante');
@@ -690,7 +708,7 @@
 	 */
 	function guardarTiempoMapa($Forma,$IdCampo,$IdMapa,$Estado){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion = abrirConexion();
+		$components = getComponents();
 		if($Forma["TipoTiempoMap"]!="0"){
 			//pasamos el tiempo a segundos
 			switch($Forma["TipoTiempoMap"]){
@@ -708,8 +726,8 @@
 			//ahora aumentamos la fecha de hoy segun ese tiempo
 			$Hoy=strtotime(date("Y-m-d H:i:s"));
 			$FechaTotal=date("Y-m-d H:i:s",$Hoy+$Tiempo);
-			$Query="UPDATE mapa_conceptual SET fecha_limite='".$FechaTotal."' WHERE id_mapa_conceptual='".$IdMapa."';";
-			if(!pg_query($Query)){
+			$Query="UPDATE mapaConceptual SET fechaLimite='".$FechaTotal."' WHERE idMapaConceptual='".$IdMapa."';";
+			if(!$components->__executeQuery($Query,$components->getConnect())){
 				$Respuesta->addAlert("Duracion no actualizada. Intente de nuevo mas tarde.");
 			}
 			else{
@@ -720,7 +738,7 @@
 		else{
 			$Respuesta->addAlert("Debe definir el tiempo");
 		}
-		cerrarConexion($Conexion);
+		cerrarConexion($components->getConnect());
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('guardarTiempoMapa');

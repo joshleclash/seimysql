@@ -120,7 +120,7 @@
 	*/
 	function guardarMapaConceptual($Concepto,$InfoGeneralConcepto,$Duracion,$Tematica)
         {
-            
+                return $InfoGeneralConcepto;
 		$components=  getComponents();
 		if($components!=false)
 		{
@@ -133,7 +133,7 @@
 			$ResultadoIdMP=$components->__executeQuery($ConsultaIdMP,$components->getConnect());   
 			if(mysql_affected_rows($components->getConnect())==0)
 			{
-                            
+                                
 				$InsercionMP="INSERT INTO mapaconceptual
                                                 (idUsuario, idTipoMapa, nombreMapa, totalConceptos, totalRelaciones, estadoMapa, duracionMapa, fechaInicio, fechaLimite)
                                                 VALUES (".$NumIdentidad.",".$InfoGeneralConcepto['TipoMapa'].",'".$InfoGeneralConcepto['NombreMapa']."',".$InfoGeneralConcepto['Conceptos'].",".$InfoGeneralConcepto['Relaciones'].",'".$InfoGeneralConcepto['EstadoMapa']."','".$Duracion."','".$Today."','".$DateLimit."');";
@@ -152,7 +152,8 @@
                                                 (nombreConcepto, textoConcepto, idMapaConceptual)     
                                                 VALUES('".trim($Vector['NomConcepto'])."',
 						'".trim($Vector['NumConcepto'])."',".$IdMP['idMapaConceptual'].")";
-						if(!$components->__executeQuery($InsercionConcepto,$components->getConnect()))
+                                                $resultConcepto = $components->__executeQuery($InsercionConcepto,$components->getConnect());
+                                                if(!$resultConcepto)
 						{
 							return "Insercion a concepto fallo.";
 						}
@@ -290,7 +291,7 @@
 	function cargarListadoMapa(){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		$components=  getComponents();
-		$NumIdentidad = $_SESSION["NumIdentidad"];
+		$NumIdentidad = $_SESSION["_User"]->identificacion;
 		$QueryMapasDocente=$components->__executeQuery("SELECT idMapaConceptual as id, nombreMapa as nombre, estadoMapa as estado, fechaLimite as feclim FROM mapaconceptual WHERE idUsuario='".$NumIdentidad."';",$components->getConnect());
 		if($QueryMapasDocente)
 		{
@@ -476,18 +477,18 @@
 	function establecerEstadoMapa($IdMapa, $EstadoNuevo)
 	{
 		$Respuesta = new xajaxResponse('ISO-8859-1');
-		$Conexion=abrirConexion();
-		$NumIdentidad = $_SESSION["NumIdentidad"];
-		$ActualizacionEstadoMapa="UPDATE mapa_conceptual SET estado_mapa = ".$EstadoNuevo." WHERE id_mapa_conceptual = ".$IdMapa.";";
-		if(!pg_query($ActualizacionEstadoMapa))
+		$components=  getComponents();
+		$NumIdentidad = $_SESSION["_User"]->identificacion;
+		$ActualizacionEstadoMapa="UPDATE mapaconceptual SET estadoMapa = ".$EstadoNuevo." WHERE idMapaConceptual = ".$IdMapa.";";
+		if(!$components->__executeQuery($ActualizacionEstadoMapa,$components->getConnect()))
 		{
 			$Respuesta->AddAlert("La actualizacion del estado del mapa fallo. Intente mas tarde.");
 		}
 		else{
 			$Respuesta->addScript("xajax_cargarListadoMapa();");
 		}
-		cerrarConexion($Conexion);
-		return $Respuesta;
+		cerrarConexion($components->getConnect());
+                return $Respuesta;
 	}
 	$Xajax->registerFunction('establecerEstadoMapa');
 	
