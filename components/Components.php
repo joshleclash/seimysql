@@ -1,26 +1,32 @@
 <?php
 //componente creadopor juan russi
 require_once('Dialog.php');
-require_once('Config.php');
 require_once('PHPMail.php');
-require_once ('Credenciales.php');
 //Example for use Dialog
 //Dialog::Message('pedrito', 'hola', true);
 class Components{
-var     $mysql_host = "mysql2.000webhost.com";
-var $mysql_database = "a8943238_sei";
-var $mysql_user = "a8943238_sei";
-var $mysql_password = "Temporal2012"; 
-    var $dbName="a8943238_sei";
-    var $conect;
+    /*private $dbName="552215_sei";
+    private $conect;
     protected $error='error';
     private static $date=null;
-    var $server='mysql2.000webhost.com';
-    var $user="a8943238_sei";
-    var $password="Temporal2012";
+    private $server='fdb3.awardspace.com';
+    private $user="552215_sei";
+    private $password="1019002704@";*/
+    private $dbName="uccmysql";
+    private $conect;
+    protected $error='error';
+    private static $date=null;
+    private $server='localhost';
+    private $user="root";
+    private $password="";
     public function __construct() {
-        $this->conect = mysql_connect($this->mysql_host, $this->mysql_user, $this->mysql_password);
-        mysql_select_db($this->dbName, $this->conect);
+        $this->conect = mysql_connect($this->server, $this->user, $this->password);
+        if($this->conect){
+         mysql_select_db($this->dbName, $this->conect);   
+        }else{
+         return $this->error.mysql_error();   
+        }
+        
     }
     public function __executeQuery($query=null,$conect=null){
         $rs = mysql_query($query,@$conect);

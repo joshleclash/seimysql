@@ -9,7 +9,7 @@ class userModel{
         $this->conect=$this->components->getConnect();
     }
     public function saveUser(){
-        $string = '@#&0987654321ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                $string = '@#&0987654321ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         $temp="";
         for($i=0;$i<=10;$i++):
             $temp .= substr($string,rand(0,62),1);

@@ -26,7 +26,7 @@ include_once '../controller/userController.php';
                 <br/>
                 <br/><br/><br/><br/><br/><br/>
             </span>
-            <form class="login" action="<?php echo PATCH?>/Controller/UserController.php?option=0" id="formLogin" method="POST">
+            <form class="login" action="<?php echo PATCH?>/controller/userController.php?option=0" id="formLogin" method="POST">
                 <span>Iniciar Sesion</span>
                 <table style="padding: 10px; margin-left: 30px; width: 85%">
                     <tr>
