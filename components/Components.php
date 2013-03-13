@@ -3,18 +3,23 @@
 require_once('Dialog.php');
 require_once('Config.php');
 require_once('PHPMail.php');
+require_once ('Credenciales.php');
 //Example for use Dialog
 //Dialog::Message('pedrito', 'hola', true);
 class Components{
-    public $dbName="uccmysql";
-    private $conect;
+var     $mysql_host = "mysql2.000webhost.com";
+var $mysql_database = "a8943238_sei";
+var $mysql_user = "a8943238_sei";
+var $mysql_password = "Temporal2012"; 
+    var $dbName="a8943238_sei";
+    var $conect;
     protected $error='error';
     private static $date=null;
-    private $server='localhost';
-    private $user="root";
-    private $password="";
+    var $server='mysql2.000webhost.com';
+    var $user="a8943238_sei";
+    var $password="Temporal2012";
     public function __construct() {
-        $this->conect = mysql_connect($this->server, $this->user, $this->password);
+        $this->conect = mysql_connect($this->mysql_host, $this->mysql_user, $this->mysql_password);
         mysql_select_db($this->dbName, $this->conect);
     }
     public function __executeQuery($query=null,$conect=null){
