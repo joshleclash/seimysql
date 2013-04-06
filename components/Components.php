@@ -7,19 +7,25 @@ require_once ('Credenciales.php');
 //Example for use Dialog
 //Dialog::Message('pedrito', 'hola', true);
 class Components{
-var     $mysql_host = "mysql2.000webhost.com";
-var $mysql_database = "a8943238_sei";
-var $mysql_user = "a8943238_sei";
-var $mysql_password = "Temporal2012"; 
-    var $dbName="a8943238_sei";
-    var $conect;
-    protected $error='error';
+    /*private $mysql_host = "mysql2.000webhost.com";
+    private $mysql_database = "a8943238_sei";
+    private $mysql_user = "a8943238_sei";
+    private $mysql_password = "Temporal2012"; 
+    private $dbName="a8943238_sei";
+    /**DEvelopment*/
+    
+    private $mysql_host = "localhost";
+    private $mysql_user = "root";
+    private $mysql_password = ""; 
+    private $dbName="uccmysql";
+    private $conect;
+    private $error='error';
     private static $date=null;
-    var $server='mysql2.000webhost.com';
-    var $user="a8943238_sei";
-    var $password="Temporal2012";
     public function __construct() {
         $this->conect = mysql_connect($this->mysql_host, $this->mysql_user, $this->mysql_password);
+        if (!$this->conect){
+            return $this->error . " -" . mysql_error();
+        }
         mysql_select_db($this->dbName, $this->conect);
     }
     public function __executeQuery($query=null,$conect=null){
