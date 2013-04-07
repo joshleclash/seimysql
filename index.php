@@ -1,4 +1,5 @@
 <?php
+include_once 'components/Components.php';
 	$Arch = "conf/hdb.oej";
 	$Arch1 = "installer.php";
 	$Arch2 = "crear.php";
@@ -57,7 +58,8 @@
 <html>
 <head>
 <title>SEI - Bienvenidos</title>
-<link rel="stylesheet" type="text/css" href="styles/EstiloIndex.css"></link>
+<link rel="stylesheet" type="text/css" href="styles/EstiloIndex.css">
+<link href='http://fonts.googleapis.com/css?family=Days+One' rel='stylesheet' type='text/css'>
 <script language="javascript" src="js/ValidacionUsuario.js"></script>
 <script type='text/javascript' src='js/Registro.js'>
 <!---->
@@ -67,14 +69,13 @@ $Xajax->printJavascript("lib/xajax/");
 ?>
 </head>
 <body>
+    <div class="header">
+        SEI
+    </div>    
+    <fieldset class="container">
+        <legend class="title">Sistema basado en conocimientos para Entrenamiento Inteligente orientado a la Evaluaci&oacute;n</legend>
 <form name="FormaIngreso" id="FormaIngreso" method="post">
 	<table align="center">
-		<tr align="center">
-			<th colspan="2" style="height:100px;"></th>
-		</tr>
-		<tr align="center">
-			<th colspan="2"><h2>SEI</h2><br>Sistema basado en conocimientos para Entrenamiento Inteligente orientado a la Evaluaci&oacute;n</th>
-		</tr>
 		<tr>
 			<td height="20" colspan="2"></td>
 		</tr>
@@ -88,24 +89,29 @@ $Xajax->printJavascript("lib/xajax/");
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-				<button type="button" id="BotonIngresar" onClick="validarFormaIngreso(this.form)">Ingresar</button>
+				<input type="button" id="BotonIngresar" onClick="validarFormaIngreso(this.form)" value="Ingresar"/>
 			</td>
 		</tr>
 		<tr>
 			<td height="20" colspan="2"></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center">
-				¿Es un usuario nuevo? Para registrarse, haga click <a href="registro.php" target="_self">aqui</a>.
+			<td colspan="2">
+				<a href="registro.php" target="_self">Registro de usuario</a>.
+                                <a href="javascript:;" onClick="xajax_olvidoContrasena(document.getElementById('IdUsuario').value);">Restablecer clave</a>.
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-				¿Olvid&oacute; su contrase&ntilde;a? Haga click <a href="javascript:;" onClick="xajax_olvidoContrasena(document.getElementById('IdUsuario').value);">aqui</a>.
+				
 			</td>
 		</tr>
 	</table>
 </form>
+        <div class="footer">
+            webside solutions ucc @ <?php echo Components::getDate('America/bogota','Y');?>
+        </div>        
+</fieldset>
 </body>
 </html>
 <?php
