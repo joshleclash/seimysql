@@ -134,11 +134,11 @@
 			$Query = "SELECT nombre_concepto
 					  FROM     concepto
 					  WHERE mapa_conceptual_id_mapa_conceptual='".$IdMapa."'
-					  AND nombre_concepto similar to '%[*AZ]%' 
-					  ORDER BY RANDOM()";
+					  AND nombre_concepto like '%[*AZ]%' ";
+					  
 			$ResSelect=mysql_query($Query);
 			if(!$ResSelect){
-				$Respuesta->addAlert("Ha ocurrido un error. ".pg_last_error());
+				$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error());
 			}
 			else
 			{

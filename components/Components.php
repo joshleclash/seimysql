@@ -166,7 +166,8 @@ class Components{
             $message = $msg;
             $mail->IsHTML(true);
             $mail->Body = $message;
-            $send = $mail->Send();
+            //$send = $mail->Send();
+            $send =true;
             if($send){
                 return true;
             }else{

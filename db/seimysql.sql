@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-04-2013 a las 22:09:45
+-- Tiempo de generación: 19-04-2013 a las 04:50:59
 -- Versión del servidor: 5.5.27
 -- Versión de PHP: 5.4.7
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `concepto` (
   `mapa_conceptual_id_mapa_conceptual` int(11) NOT NULL,
   `id_concepto` varchar(11) NOT NULL,
-  `nombre_concepto` varchar(20) NOT NULL,
-  `texto_concepto` text NOT NULL
+  `nombre_concepto` varchar(500) NOT NULL,
+  `texto_concepto` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -38,15 +38,27 @@ CREATE TABLE IF NOT EXISTS `concepto` (
 --
 
 INSERT INTO `concepto` (`mapa_conceptual_id_mapa_conceptual`, `id_concepto`, `nombre_concepto`, `texto_concepto`) VALUES
-(16, '1', 'raiz1', ''),
-(16, '1.1', 'ceoncepto de relacio', ''),
-(16, '1.2', 'concepto de relacion', ''),
-(17, '1', 'raiz1', ''),
-(17, '1.1', 'ceoncepto de relacio', ''),
-(17, '1.2', 'concepto de relacion', ''),
-(18, '1', 'raiz1', ''),
-(18, '1.1', 'ceoncepto de relacio', ''),
-(18, '1.2', 'concepto de relacion', '');
+(53, '1', 'TEST1', ''),
+(53, '1.1', 'Concepto', ''),
+(53, '1.2', 'Concepto', ''),
+(54, '1', 'TEST1', ''),
+(54, '1.1', 'Concepto', ''),
+(54, '1.1.1', 'Concept', ''),
+(54, '1.2', 'Concepto', ''),
+(54, '1.2.1', 'test concept', ''),
+(55, '1', 'TEST1', ''),
+(55, '1.1', 'Concepto', ''),
+(55, '1.2', ' uodate', ''),
+(56, '1', 'TEST2', ''),
+(56, '1.1', 'Concepto1', ''),
+(56, '1.2', 'Concepto2', ''),
+(56, '1.3', 'Concepto3', ''),
+(56, '1.3.1', 'CONCEPTO', ''),
+(56, '1.3.2', 'PRUEBA CONCEPTO', ''),
+(57, '1', 'TEST2', ''),
+(57, '1.1', 'Concepto1TEST', ''),
+(57, '1.2', 'Concepto2', ''),
+(57, '1.3', 'Concepto3', '');
 
 -- --------------------------------------------------------
 
@@ -59,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `grupo` (
   `descripcion_grupo` text NOT NULL,
   `nombre_grupo` varchar(30) NOT NULL,
   PRIMARY KEY (`id_grupo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Volcado de datos para la tabla `grupo`
@@ -67,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `grupo` (
 
 INSERT INTO `grupo` (`id_grupo`, `descripcion_grupo`, `nombre_grupo`) VALUES
 (1, 'Matematicas1', 'Grupo de matematicas creado pa'),
-(2, 'Matematicas', 'Grupo de matematicas creado pa');
+(2, 'Matematicas', 'Grupo de matematicas creado pa'),
+(3, 'Matematicas', 'Grupo de matemaricas prueba');
 
 -- --------------------------------------------------------
 
@@ -85,9 +98,9 @@ CREATE TABLE IF NOT EXISTS `grupo_mapa_conceptual` (
 --
 
 INSERT INTO `grupo_mapa_conceptual` (`mapa_conceptual_id_mapa`, `grupo_id_grupo`) VALUES
-(18, 3),
 (18, 4),
-(18, 2);
+(18, 2),
+(57, 3);
 
 -- --------------------------------------------------------
 
@@ -110,7 +123,10 @@ INSERT INTO `grupo_usuario` (`grupo_id_grupo`, `usuario_id_usuario`) VALUES
 (4, 1019002704),
 (2, 2034523),
 (2, 123456789),
-(2, 121212);
+(2, 121212),
+(3, 123456),
+(3, 121212),
+(3, 131313);
 
 -- --------------------------------------------------------
 
@@ -155,7 +171,15 @@ CREATE TABLE IF NOT EXISTS `juego` (
   `id_juego` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_juego` varchar(30) NOT NULL,
   PRIMARY KEY (`id_juego`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `juego`
+--
+
+INSERT INTO `juego` (`id_juego`, `nombre_juego`) VALUES
+(1, 'StandAlone'),
+(2, 'Sopa Letras');
 
 -- --------------------------------------------------------
 
@@ -170,6 +194,14 @@ CREATE TABLE IF NOT EXISTS `juego_mapa` (
   `estado_juego_mapa` int(11) NOT NULL,
   `mostrar_status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `juego_mapa`
+--
+
+INSERT INTO `juego_mapa` (`mapa_conceptual_id_mapa_conceptual`, `juego_id_juego`, `duracion_juego`, `estado_juego_mapa`, `mostrar_status`) VALUES
+(19, 2, 30, 1, 1),
+(19, 1, 30, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -189,16 +221,15 @@ CREATE TABLE IF NOT EXISTS `mapa_conceptual` (
   `fecha_limite` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `id_mapa_conceptual` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id_mapa_conceptual`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
 
 --
 -- Volcado de datos para la tabla `mapa_conceptual`
 --
 
 INSERT INTO `mapa_conceptual` (`usuario_id_usuario`, `tipo_mapa_id_tipo_mapa`, `nombre_mapa`, `total_conceptos`, `total_relaciones`, `estado_mapa`, `duracion_mapa`, `fecha_inicio`, `fecha_limite`, `id_mapa_conceptual`) VALUES
-(1019002704, 1, 'MapaGenericos', 3, 2, '0', 1, '2013-04-07 01:46:38', '2013-04-07 02:46:38', 16),
-(1019002704, 1, 'MapasGenerico', 3, 2, '0', 1, '2013-04-07 01:48:35', '2013-04-07 02:48:35', 17),
-(1019002704, 1, 'MapaGenerico', 3, 2, '1', 1, '2013-04-06 19:12:44', '2013-04-07 02:54:22', 18);
+(123456, 1, 'TEST', 3, 2, '0', 1, '2013-04-19 02:34:17', '2013-04-19 03:34:17', 55),
+(123456, 1, 'TEST1', 4, 3, '1', 1, '2013-04-19 02:49:47', '2013-04-19 03:38:49', 57);
 
 -- --------------------------------------------------------
 
@@ -207,17 +238,19 @@ INSERT INTO `mapa_conceptual` (`usuario_id_usuario`, `tipo_mapa_id_tipo_mapa`, `
 --
 
 CREATE TABLE IF NOT EXISTS `mapa_conceptual_tematica` (
-  `tematica_id_tematica` int(11) NOT NULL AUTO_INCREMENT,
+  `tematica_id_tematica` int(11) NOT NULL,
   `mapa_conceptual_id_mapa_conceptual` int(11) NOT NULL,
   PRIMARY KEY (`tematica_id_tematica`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `mapa_conceptual_tematica`
 --
 
 INSERT INTO `mapa_conceptual_tematica` (`tematica_id_tematica`, `mapa_conceptual_id_mapa_conceptual`) VALUES
-(1, 6);
+(0, 51),
+(1, 53),
+(2, 49);
 
 -- --------------------------------------------------------
 
@@ -252,6 +285,28 @@ CREATE TABLE IF NOT EXISTS `relacion` (
   `nombre_relacion` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `relacion`
+--
+
+INSERT INTO `relacion` (`concepto_mapa_conceptual_id_mapa_conceptual`, `concepto_id_concepto`, `id_concepto_hijo`, `nombre_relacion`) VALUES
+(53, '1', '1.1', 'relacion'),
+(53, '1', '1.2', 'relacion'),
+(54, '1', '1.1', 'relacion'),
+(54, '1.1', '1.1.1', 'Otra relacion'),
+(54, '1', '1.2', 'relacion'),
+(54, '1.2', '1.2.1', 'Otra'),
+(55, '1', '1.1', 'relacion de prueba'),
+(55, '1', '1.2', 'relacion de prueba2'),
+(56, '1', '1.1', 'relacion1'),
+(56, '1', '1.2', 'relacion1'),
+(56, '1', '1.3', 'relacion3'),
+(56, '1.3', '1.3.1', 'OTRA'),
+(56, '1.3', '1.3.2', 'TEST'),
+(57, '1', '1.1', 'relacion1'),
+(57, '1', '1.2', 'relacion1'),
+(57, '1', '1.3', 'relacion3');
+
 -- --------------------------------------------------------
 
 --
@@ -278,14 +333,15 @@ CREATE TABLE IF NOT EXISTS `tematica` (
   `nombre_tematica` varchar(50) DEFAULT NULL,
   `id_tematica` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id_tematica`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `tematica`
 --
 
 INSERT INTO `tematica` (`nombre_tematica`, `id_tematica`) VALUES
-('temporal', 1);
+('temporal', 1),
+('Matematicas', 2);
 
 -- --------------------------------------------------------
 
@@ -297,7 +353,14 @@ CREATE TABLE IF NOT EXISTS `tipo_mapa` (
   `id_tipo_mapa` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_tipo_mapa` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id_tipo_mapa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `tipo_mapa`
+--
+
+INSERT INTO `tipo_mapa` (`id_tipo_mapa`, `nombre_tipo_mapa`) VALUES
+(1, 'Jerarquico');
 
 -- --------------------------------------------------------
 
@@ -313,17 +376,17 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `clave` varchar(20) NOT NULL,
   `correo_usuario` varchar(50) NOT NULL,
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=123456790 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1234568 ;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `perfil_id_perfil`, `nombre_usuario`, `apellido_usuario`, `clave`, `correo_usuario`) VALUES
-(121212, 2, 'sada', 'asd', '121212', 'joshleclash@gmail.com'),
-(2034523, 2, 'estudiante', 'apellidos estudiante', '2034523', 'estudiante@algo.com'),
-(123456789, 2, 'estudiante', 'estudiante', '123456789', 'estudiante2@cosito.com'),
-(1019002704, 1, 'admin', 'admin', '123456', 'joshleclash@gmail.com');
+(121212, 2, 'Usuario ', 'Prueba', '121212', 'prueba@usuario.com'),
+(123456, 1, 'admin', 'admin', '123456', 'joshleclash@gmail.com'),
+(131313, 2, 'Usuario dos', 'Pruebas dos', '131313', 'purbasdos@algo.com'),
+(1234567, 2, 'estudiante', 'estudiante', '1234567', 'estudiante2@cosito.com');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

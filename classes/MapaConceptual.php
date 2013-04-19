@@ -120,23 +120,66 @@
 	*/
 	function guardarMapaConceptual($Concepto,$InfoGeneralConcepto,$Duracion,$Tematica)
 	{
-		$Conexion=abrirConexion();
-		if($Conexion!=false)
+	       $Conexion=abrirConexion();
+               if($Conexion!=false)
 		{
-			$NumIdentidad = $_SESSION["NumIdentidad"];
+                    	$NumIdentidad = $_SESSION["NumIdentidad"];
 			$ConsultaIdMP="SELECT id_mapa_conceptual FROM mapa_conceptual WHERE nombre_mapa = '".$InfoGeneralConcepto['NombreMapa']."' 
 					   AND usuario_id_usuario = ".$NumIdentidad.";";
-			$Today=date("Y-m-d H:i:s");
+			$Today=  Components::getDate();//date("Y-m-d H:i:s");
 			$NowDate = getdate(strtotime($Today));
 			$DateLimit = date("Y-m-d H:i:s", mktime( ($NowDate["hours"]+$Duracion), ($NowDate["minutes"]),($NowDate["seconds"]),($NowDate["mon"]),($NowDate["mday"]),($NowDate["year"])));
 			$ResultadoIdMP=mysql_query($ConsultaIdMP);   
-			if(mysql_num_rows($ResultadoIdMP)==0)
+                        $rows = mysql_num_rows($ResultadoIdMP);
+                        if($rows == 0)
 			{
 				$InsercionMP="INSERT INTO mapa_conceptual 
                                     (usuario_id_usuario, tipo_mapa_id_tipo_mapa, nombre_mapa, total_conceptos, total_relaciones, estado_mapa, duracion_mapa, fecha_inicio, fecha_limite)
                                     VALUES (".$NumIdentidad.", ".$InfoGeneralConcepto['TipoMapa'].", '".trim($InfoGeneralConcepto['NombreMapa'])."', ".$InfoGeneralConcepto['Conceptos'].", ".$InfoGeneralConcepto['Relaciones'].", '".$InfoGeneralConcepto['EstadoMapa']."', ".$Duracion.", '".$Today."', '".$DateLimit."')";
                                     //VALUES (".$NumIdentidad.",".$InfoGeneralConcepto['TipoMapa'].",'".trim($InfoGeneralConcepto['NombreMapa'])."',".$InfoGeneralConcepto['Conceptos'].",".$InfoGeneralConcepto['Relaciones'].",'".$InfoGeneralConcepto['EstadoMapa']."','".$Duracion."','".$Today."','".$DateLimit."');";
 				//echo $InsercionMP;
+                                $rs = mysql_query($InsercionMP);
+                                if($rs){
+                                    $lastId = mysql_insert_id();
+                                    $x=0;
+                                    foreach($Concepto as $k ):
+                                        
+                                                //INSERCION DE CONCEPTOS
+                                            $InsercionConcepto="INSERT INTO concepto 
+                                                        (mapa_conceptual_id_mapa_conceptual, id_concepto, nombre_concepto, texto_concepto) ".   
+                                                        "VALUES(".$lastId.",'".$k["NumConcepto"]."','".$k["NomConcepto"]."','".$k["TextoDesc"]."');";
+                                                    $rsConcept= mysql_query($InsercionConcepto);
+                                                    if(!$rsConcept){
+                                                        return 'Error guardando concepto! fallo'.  mysql_error();
+                                                    }
+                                                    if($x>0){
+                                                        $InsercionRelacion="INSERT INTO relacion
+                                                                        (concepto_mapa_conceptual_id_mapa_conceptual, concepto_id_concepto, id_concepto_hijo, nombre_relacion)  
+                                                                         VALUES(".$lastId.",'".trim($k['NumRelacionUp'])."','".trim($k['NumConcepto'])."',
+                                                                         '".trim($k['RelacionUp'])."');";
+                                                            $rsRelacion = mysql_query($InsercionRelacion);
+                                                            if(!$rsRelacion){
+                                                                return 'Error guardando relacion! fallo'.  mysql_error();
+                                                            }
+                                                   }
+                                              $x++;      
+                                    endforeach;
+                                    $InsertarTematica="INSERT INTO mapa_conceptual_tematica VALUES('".$Tematica."','".$lastId."')";
+					if(!mysql_query($InsertarTematica)){
+						return "No hay juegos para insertar";
+					}
+                                    return true;
+                                }else{
+                                    return 'Error en la insercion de mapa conceptual';
+                                }
+                            }else{
+                                return 'El nombre de mapa'.$InfoGeneralConcepto['NombreMapa'].'Ya esta resgitrado en nuestro sistema por favor cambielo';
+                            }
+                     }else{
+                         return 'Exisito un error en la conexion por favor valide la informacion';
+                     }
+                                
+                                /*OLD VERSION
 				if(mysql_query($InsercionMP))
 				{
 					$ConsultaIdMP="SELECT id_mapa_conceptual FROM mapa_conceptual WHERE nombre_mapa = '".trim($InfoGeneralConcepto['NombreMapa'])."' 
@@ -188,7 +231,7 @@
 					}
 
 				}
-				else
+                                else
 				{
 					return "La insercion de mapa conceptual fallo.";
 				}
@@ -202,7 +245,7 @@
 		{
 			return "La conexion fallo.";
 		}
-		return true;
+		return true;*/
 	}	
 	
 	/**
@@ -633,7 +676,7 @@
 		if($IdMapa!=null && $Indicador!=0){
 			$Conexion=abrirConexion();
 			$QueryMapa="DELETE FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';";
-			if(!mysql_query($QueryMapa)){
+                        if(!mysql_query($QueryMapa)){
 				$Respuesta->addAlert("Ha ocurrido un problema al editar el mapa. Intente de nuevo m�s tarde.");
 			}
 			cerrarConexion($Conexion);
@@ -700,14 +743,14 @@
 		//cuadramos el id del mapa
 		$IdTematica=$FormaMapa["Tematica"];
                 //--------------------------
-		$EstadoMapa=guardarMapaConceptual($GLOBALS["MatrizConcepto"],$InfoMapa,$ValorDuracion,$IdTematica);
-                if($EstadoMapa!=true){
-			$Respuesta->addAlert("Hubo un error al guardar el mapa conceptual. Intente de nuevo m�s tarde.");
-		}
-		else{
-			$Respuesta->addAlert("Mapa conceptual creado con �xito.");
-			$Respuesta->addScript("xajax_cargarListadoMapa();");
-		}
+		$EstadoMapa=guardarMapaConceptual($GLOBALS["MatrizConcepto"],$InfoMapa,$ValorDuracion,$IdTematica,$IdMapa);
+                if($EstadoMapa){
+                    $Respuesta->addAlert("Mapa creado correctamente");
+                }else{
+                    $Respuesta->addAlert($EstadoMapa);
+                }
+               	
+		$Respuesta->addScript("xajax_cargarListadoMapa();");
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('recibirDatosMapa');
@@ -730,16 +773,19 @@
 		else{
 			$VectorConcepto=mysql_fetch_array($QueryConcepto);
 			//consulta que contiene todos los conceptos del mapa que sean padres
-			$QueryPadres=mysql_query("SELECT DISTINCT concepto_id_concepto as id_padre FROM relacion 
-			WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."';");
+                        $sql="SELECT DISTINCT concepto_id_concepto as id_padre FROM relacion 
+			WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."';";
+			$QueryPadres=mysql_query($sql);
+                        
 			if($QueryPadres){
 				if(mysql_num_rows($QueryPadres)>0){
-					$CadenaPadres=implode(",",mysql_fetch_array_columns($QueryPadres));
+					$CadenaPadres=implode(",",mysql_fetch_array($QueryPadres));
 				}
 				else{
 					$CadenaPadres="";
 				}
 			}
+                        
 			//informacion del mapa
 			$VecMapa=mysql_fetch_array(mysql_query("SELECT nombre_mapa as nombre, estado_mapa as estado, duracion_mapa as duracion FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';"));
 			//cuadramos el intervalo y la duracion
@@ -810,7 +856,7 @@
 			$Salida.="</td></tr>";
 			if($VecMapa["estado"]==0){
 				$Salida.="<tr><td>";
-				$Salida.="<button type='button' id='BotonGuardarMapa' onClick=\"obtenerDatosMapaEditado('".$IdMapa."');\">Guardar mapa</button>";
+				$Salida.="<button type='button' id='BotonGuardarMapa' onClick=\"obtenerDatosMapaEditado('".$IdMapa."');\">Actualizar mapa</button>";
 				$Salida.="</td></tr>";
 			}
 			$Salida.="<input type='hidden' name='campoactual' id='campoactual' value=''>";
@@ -873,4 +919,5 @@
 		return $Respuesta;
 	}
 	$Xajax->registerFunction('mostrarHojasMapa');
+       
 ?>

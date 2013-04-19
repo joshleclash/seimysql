@@ -573,10 +573,10 @@ function crearGrafica($TipoGrafica,$VecLineas,$MatrizLineas,$VecSerieHorizontal)
 				elseif($TipoGrafica==2){
 					$DataSet->SetSerieName($Vl[2]." ".$Vl[1],"".$Vl[0]);
 				}
-				
 				 for($i=0;$i<count($VecSerieHorizontal);$i++){
 					$Vsh=explode("@",$VecSerieHorizontal[$i]);
-					for($m=0;$m<count($MatrizLineas[$Linea]);$m++){
+                                        if(count($MatrizLineas)>=1){
+                                            for($m=0;$m<count($MatrizLineas[$Linea]);$m++){
 						$Ml=explode("@",$MatrizLineas[$Linea][$m]);
 						if($Vsh[0]==$Ml[0]){
 							$ValorPunto=$Ml[1];
@@ -585,8 +585,9 @@ function crearGrafica($TipoGrafica,$VecLineas,$MatrizLineas,$VecSerieHorizontal)
 						else{
 							$ValorPunto=0;
 						}
-					}
-					$Puntos[]=$ValorPunto;
+                                            }
+                                        }
+                                       @$Puntos[]=$ValorPunto;
 				 }
 				 $DataSet->AddPoint($Puntos,"".$Vl[0]);
 				 $DataSet->AddSerie("".$Vl[0]);

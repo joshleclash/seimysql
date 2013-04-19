@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Esta función se encarga de mostrar el listado de mapas conceptuales pertinentes al estudiante
+	* Esta funciï¿½n se encarga de mostrar el listado de mapas conceptuales pertinentes al estudiante
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function standAloneMapas(){
@@ -12,7 +12,7 @@
 		$SqlMapa.= "AND u.id_usuario=gu.usuario_id_usuario ";
 		$SqlMapa.= "AND perfil_id_perfil='1';";
 		
-		$QueryMapa=pg_query($SqlMapa);
+		$QueryMapa=mysql_query($SqlMapa);
 	
 		if(!$QueryMapa){
 			$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
@@ -22,7 +22,7 @@
 		$Salida.= "<table align='left' width='100%'>";
 		$Salida.= "<tr align='right'><td colspan='6'><a href='javascript:void(0')' onClick='cargarInstruccionesJuego(2)'><img src='img/ico_editar.gif' border='0'>&nbsp;Instrucciones</a></td></tr>";
 		$Salida.= "<tr align='left'><th width='30%'>Nombre Mapa</th><th>Tem&aacute;tica</th><th width='15%'>Estado</th><th>Fecha L&iacute;mite</th><th>Docente</th><th>Grupo</th></tr>";
-		while($Vec=pg_fetch_array($QueryMapa)){
+		while($Vec=mysql_fetch_array($QueryMapa)){
 			$Id=$Vec[0];
 			$Gr=$Vec[1];
 			
@@ -34,14 +34,14 @@
 			$SqlDoc.= "jm.juego_id_juego IN(SELECT id_juego FROM juego WHERE nombre_juego='StandAlone') AND ";
 			$SqlDoc.= "jm.estado_juego_mapa = '1';";
 			
-			$QueryDoc=pg_query($SqlDoc);
+			$QueryDoc=mysql_query($SqlDoc);
 			
 			if(!$QueryDoc){
 				$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 				return $Respuesta->getXML();
 			}
-			if(pg_num_rows($QueryDoc)!=0){
-				while($VecD=pg_fetch_array($QueryDoc)){
+			if(mysql_num_rows($QueryDoc)!=0){
+				while($VecD=mysql_fetch_array($QueryDoc)){
 					$IdMapa=$VecD[0];
 					$NomMapa=$VecD[1];
 					$EstadoMapa=$VecD[2];
@@ -52,13 +52,13 @@
 						$SqlResp.= "relacion_concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."' AND ";
 						$SqlResp.= "usuario_id_usuario='".$_SESSION["NumIdentidad"]."';";
 						
-						$QueryResp=pg_query($SqlResp);
+						$QueryResp=mysql_query($SqlResp);
 						
 						if(!$QueryResp){
 							$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 							return $Respuesta->getXML();
 						}
-						if(pg_num_rows($QueryResp)==0){
+						if(mysql_num_rows($QueryResp)==0){                                                    
 							$LinkIni="<a href='javascript:;' onClick='xajax_traerNodoRaiz(".$IdMapa.");'>";
 							$LinkFin="</a>";
 							$EstadoMapa="Habilitado";
@@ -81,19 +81,19 @@
 					$SqlUsu.= "gu.grupo_id_grupo = '".$Gr."' ";
 					$SqlUsu.= "AND u.id_usuario=gu.usuario_id_usuario ";
 					$SqlUsu.= "AND perfil_id_perfil='1' LIMIT 1;";
-					$QueryUsu=pg_query($SqlUsu);
+					$QueryUsu=mysql_query($SqlUsu);
 					if($QueryUsu){
-						if(pg_num_rows($QueryUsu)>0){
-							$VecUsu=pg_fetch_assoc($QueryUsu);
+						if(mysql_num_rows($QueryUsu)>0){
+							$VecUsu=mysql_fetch_array($QueryUsu);
 							$Nombre=ucwords(strtolower($VecUsu["ape"]." ".$VecUsu["nom"]));
 						}
 					}
 					//-------------------
 					//nombre grupo
-					$NomGrupo=pg_fetch_assoc(pg_query("SELECT nombre_grupo as nom FROM grupo WHERE id_grupo='".$Gr."'"));
+					$NomGrupo=mysql_fetch_array(mysql_query("SELECT nombre_grupo as nom FROM grupo WHERE id_grupo='".$Gr."'"));
 					//------------
 					//definimos tematica
-					$Tema=pg_fetch_array(pg_query("SELECT t.nombre_tematica as nom FROM tematica t, mapa_conceptual_tematica mct WHERE t.id_tematica=mct.tematica_id_tematica AND mct.mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;"));
+					$Tema=mysql_fetch_array(mysql_query("SELECT t.nombre_tematica as nom FROM tematica t, mapa_conceptual_tematica mct WHERE t.id_tematica=mct.tematica_id_tematica AND mct.mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;"));
 					//--------
 					$Salida.= "<tr align='left'><td>".$LinkIni.ucwords($NomMapa).$LinkFin."</td><td>".ucwords(strtolower($Tema["nom"]))."</td><td>".ucwords($EstadoMapa)."</td><td>".$FechaLimite."</td><td>".$Nombre."</td><td>".$NomGrupo["nom"]."</td></tr>";
 				}
@@ -110,7 +110,7 @@
 	$Xajax->registerFunction('standAloneMapas');
 	
 	/**
-	* Esta función se encarga de traer el primer nodo del mapa seleccionado para dar inicio al juego
+	* Esta funciï¿½n se encarga de traer el primer nodo del mapa seleccionado para dar inicio al juego
 	* @param integer $IdMap Codigo del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
@@ -118,16 +118,16 @@
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		$Conexion=abrirConexion();
 		$SqlVerif = "SELECT COUNT(*) FROM relacion;";
-		$QueryVerif = pg_query($SqlVerif);
+		$QueryVerif = mysql_query($SqlVerif);
 		if(!$QueryVerif){
 			$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 			$Respuesta->AddScriptCall("xajax_standAloneMapas");
 			cerrarConexion($Conexion);
 			return $Respuesta->getXML();
 		}
-		$VecVerif=pg_fetch_array($QueryVerif);
+		$VecVerif=mysql_fetch_array($QueryVerif);
 		if($VecVerif[0]<4){
-			$Respuesta->AddAlert("No es posible jugar StandAlone debido a que no hay suficientes elementos en el mapa conceptual.\r\nPor favor comuníquese con el docente encargado");
+			$Respuesta->AddAlert("No es posible jugar StandAlone debido a que no hay suficientes elementos en el mapa conceptual.\r\nPor favor comunï¿½quese con el docente encargado");
 			$Respuesta->AddScriptCall("xajax_standAloneMapas");
 			cerrarConexion($Conexion);
 			return $Respuesta->getXML();
@@ -136,27 +136,27 @@
 		$SqlRaiz.= "concepto_mapa_conceptual_id_mapa_conceptual = '".$IdMap."' AND ";
 		$SqlRaiz.= "concepto_id_concepto NOT IN(SELECT id_concepto_hijo FROM relacion WHERE ";
 		$SqlRaiz.= "concepto_mapa_conceptual_id_mapa_conceptual='".$IdMap."');";
-		$QueryMatriz=pg_query($SqlRaiz);
+		$QueryMatriz=mysql_query($SqlRaiz);
 		if(!$QueryMatriz){
 			$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 			$Respuesta->AddScriptCall("xajax_standAloneMapas");
 			cerrarConexion($Conexion);
 			return $Respuesta->getXML();
 		}
-		$Vec=pg_fetch_assoc($QueryMatriz);
+		$Vec=mysql_fetch_array($QueryMatriz);
 		reescribirArchivoTemp();
 		//traigo de la BD el dato de tiempo
 		$SqlTiempoLim = "SELECT duracion_juego FROM juego_mapa WHERE ";
 		$SqlTiempoLim.= "juego_id_juego IN(SELECT id_juego FROM juego WHERE nombre_juego='StandAlone' LIMIT 1) AND ";
 		$SqlTiempoLim.= "mapa_conceptual_id_mapa_conceptual='".$IdMap."' LIMIT 1;";
-		$QueryTiempoLim = pg_query($SqlTiempoLim);
+		$QueryTiempoLim = mysql_query($SqlTiempoLim);
 		if(!$QueryTiempoLim){
 			$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 			$Respuesta->AddScriptCall("xajax_standAloneMapas");
 			cerrarConexion($Conexion);
 			return $Respuesta->getXML();
 		}
-		$TiempoLim=pg_fetch_array($QueryTiempoLim);
+		$TiempoLim=mysql_fetch_array($QueryTiempoLim);
 		$Hora=explode(":",date("H:i:s",mktime(0,0,$TiempoLim[0])));//el 10 es el valor que se debe traer desde la bd
 		$Salida = "<fieldset><legend>Jugando: StandAlone</legend>";
 		$Salida.= "<table align='center' width='60%'>";
@@ -179,7 +179,7 @@
 	$Xajax->registerFunction('traerNodoRaiz');
 	
 	/**
-	* Esta función se encarga de eliminar y crear el archivo temporal con el id del estudiante para el juego
+	* Esta funciï¿½n se encarga de eliminar y crear el archivo temporal con el id del estudiante para el juego
 	*/
 	function reescribirArchivoTemp(){
 		$Archivo = 'temp/'.$_SESSION["NumIdentidad"].'.php';
@@ -197,7 +197,7 @@
 	}
 	
 	/**
-	* Esta función se encarga de eliminar el archivo temporal con el id del estudiante para el juego
+	* Esta funciï¿½n se encarga de eliminar el archivo temporal con el id del estudiante para el juego
 	*/
 	function eliminarArchivoTemp(){
 		$Archivo = 'temp/'.$_SESSION["NumIdentidad"].'.php';
@@ -207,7 +207,7 @@
 	}
 	
 	/**
-	* Esta función se encarga de realizar una recursividad por nivel y llevar la sucesion del juego
+	* Esta funciï¿½n se encarga de realizar una recursividad por nivel y llevar la sucesion del juego
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function mainStandAlone(){
@@ -245,9 +245,9 @@
 	$Xajax->registerFunction('mainStandAlone');
 	
 	/**
-	* Esta función se encarga de forzar la terminación del juego
+	* Esta funciï¿½n se encarga de forzar la terminaciï¿½n del juego
 	* @param integer $Duracion Tiempo jugado en segundos
-	* @param integer $IdMapa Código del mapa
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function finalizarStandAlone($Duracion,$IdMapa){
@@ -265,15 +265,15 @@
 		$SqlStandAlone = "SELECT valoracion_pregunta FROM resultado_pregunta WHERE ";
 		$SqlStandAlone.= "usuario_id_usuario='".$_SESSION["NumIdentidad"]."' AND ";
 		$SqlStandAlone.= "relacion_concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."';";
-		$QueryStandAlone = pg_query($SqlStandAlone);
+		$QueryStandAlone = mysql_query($SqlStandAlone);
 		if(!$QueryStandAlone){
 			$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 			cerrarConexion($Conexion);
 			return $Respuesta->getXML();
 		}
-		$Total = pg_num_rows($QueryStandAlone);
+		$Total = mysql_num_rows($QueryStandAlone);
 		$Correctas = 0;
-		while($Resp = pg_fetch_array($QueryStandAlone)){
+		while($Resp = mysql_fetch_array($QueryStandAlone)){
 			if($Resp[0]=="t"){
 				$Correctas++;
 			}
@@ -286,9 +286,9 @@
 	$Xajax->registerFunction('finalizarStandAlone');
 	
 	/**
-	* Esta función se encarga de verificar si las respuestas son correctas o no (poda si respondió incorrecto) y almacenar el resultado en la BD
-	* @param string[] $MatrizP Matriz que contiene la información de las respuestas
-	* @param integer $IdMapa Código del mapa
+	* Esta funciï¿½n se encarga de verificar si las respuestas son correctas o no (poda si respondiï¿½ incorrecto) y almacenar el resultado en la BD
+	* @param string[] $MatrizP Matriz que contiene la informaciï¿½n de las respuestas
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @return string[] $VecHijo Vector que contiene las respuestas
 	*/
 	function verificarPreguntas($MatrizP,$IdMapa)
@@ -302,13 +302,13 @@
 					$SqlData.= "concepto_id_concepto='".$MatrizP[$Indice]["rta_correcta"][0]."' AND ";
 					$SqlData.= "id_concepto_hijo='".$MatrizP[$Indice]["rta_correcta"][1]."' AND ";
 					$SqlData.= "concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;";
-					$EjecutarQuery=pg_query($SqlData);
+					$EjecutarQuery=mysql_query($SqlData);
 					
 					if(!$EjecutarQuery){
 						return "Error de conexion de la base de datos.";
 					}
 					else{
-						$VecRespCorrecta=pg_fetch_array($EjecutarQuery);
+						$VecRespCorrecta=mysql_fetch_array($EjecutarQuery);
 						if($MatrizP[$Indice]["rta_usuario"]==$VecRespCorrecta[0]){
 							$Resp="true";
 							$VecHijo[]=$MatrizP[$Indice]["rta_correcta"][1];
@@ -329,7 +329,7 @@
 				break;
 			}
 			$SqlInsert = "INSERT INTO resultado_pregunta VALUES('".$_SESSION["NumIdentidad"]."','".$IdMapa."','".$MatrizP[$Indice]["rta_correcta"][0]."','".$MatrizP[$Indice]["rta_correcta"][1]."','".$Resp."');";
-			$EjecutarInsert=pg_query($SqlInsert);
+			$EjecutarInsert=mysql_query($SqlInsert);
 			if(!$EjecutarInsert){
 				return "Error de conexion de la base de datos.";
 			}
@@ -339,9 +339,9 @@
 	}
 	
 	/**
-	* Esta función se encarga de determinar si los nuevos nodos son padres
-	* @param string[] $VecResCor Vector que contiene la información de los conceptos
-	* @param integer $IdMapa Código del mapa
+	* Esta funciï¿½n se encarga de determinar si los nuevos nodos son padres
+	* @param string[] $VecResCor Vector que contiene la informaciï¿½n de los conceptos
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @return string[] $VecPadres Vector que contiene los nodos padres
 	*/
 	function filtroPadres( $VecResCor, $IdMapa )
@@ -355,11 +355,11 @@
 						 WHERE  concepto_mapa_conceptual_id_mapa_conceptual = '".$IdMapa."'
 						 AND    concepto_id_concepto = '".$Valor."'
 						 LIMIT  1;";
-			$Resultado = pg_query( $Consulta );
+			$Resultado = mysql_query( $Consulta );
 			if( $Resultado )
 			{
 				//Si es padre.
-				if( pg_num_rows($Resultado) != 0 )
+				if( mysql_num_rows($Resultado) != 0 )
 				{
 					//agregar nuevo vec
 					$VecPadres[] = $Valor;
@@ -375,10 +375,10 @@
 	}
 	
 	/**
-	* Esta función se encarga de generar las preguntas a partir del vector de padres recibido
-	* @param integer $Map Código del mapa
-	* @param string[] $VecConceptos Vector que contiene la información de los conceptos
-	* @param integer $Nivel Número que indica el nivel actual
+	* Esta funciï¿½n se encarga de generar las preguntas a partir del vector de padres recibido
+	* @param integer $Map Cï¿½digo del mapa
+	* @param string[] $VecConceptos Vector que contiene la informaciï¿½n de los conceptos
+	* @param integer $Nivel Nï¿½mero que indica el nivel actual
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function generarPreguntas($Map,$VecConceptos,$Nivel){
@@ -401,14 +401,14 @@
 			$QueryPregunta.="AND mc.id_mapa_conceptual = '".$Map."' ";
 			$QueryPregunta.="AND c.id_concepto='".$VecConceptos[$Pos]."';";
 			
-			$EjecutarQuery=pg_query($QueryPregunta);
+			$EjecutarQuery=mysql_query($QueryPregunta);
 			if(!$EjecutarQuery){
 				$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 				cerrarConexion($Conexion);
 				return $Respuesta->getXML();
 			}
-			if(pg_num_rows($EjecutarQuery)!=0){
-				while($VecPregunta=pg_fetch_array($EjecutarQuery)){
+			if(mysql_num_rows($EjecutarQuery)!=0){
+				while($VecPregunta=mysql_fetch_array($EjecutarQuery)){
 					//traigo el id de mapa, el id y nombre del concepto padre, id concepto hijo y relacion
 					$IdMapa=$VecPregunta[0];
 					$IdPadre=$VecPregunta[1];
@@ -417,16 +417,16 @@
 					$Relacion=$VecPregunta[4];
 					$QueryNomConceptoHijo ="SELECT nombre_concepto FROM concepto WHERE ";
 					$QueryNomConceptoHijo.="id_concepto='".$IdHijo."' AND mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;";
-					$EjecutarQueryNomConceptoHijo=pg_query($QueryNomConceptoHijo);
+					$EjecutarQueryNomConceptoHijo=mysql_query($QueryNomConceptoHijo);
 					
 					if(!$EjecutarQueryNomConceptoHijo){
 						$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 						cerrarConexion($Conexion);
 						return $Respuesta->getXML();
 					}
-					if(pg_num_rows($EjecutarQueryNomConceptoHijo)!=0){
+					if(mysql_num_rows($EjecutarQueryNomConceptoHijo)!=0){
 						//traigo el nombreo concepto hijo
-						$VecHijo=pg_fetch_array($EjecutarQueryNomConceptoHijo);
+						$VecHijo=mysql_fetch_array($EjecutarQueryNomConceptoHijo);
 						$TipoPregunta=rand(1,2);
 						//aleatoriamente se genera el tipo de pregunta (conpceto/relacion)
 						switch ($TipoPregunta){
@@ -444,7 +444,7 @@
 							$QueryRespuestasAleatorias.= "		SELECT c.tematica_id_tematica FROM mapa_conceptual_tematica c ";
 							$QueryRespuestasAleatorias.= "		WHERE c.mapa_conceptual_id_mapa_conceptual = '".$IdMapa."')) ";
 							$QueryRespuestasAleatorias.= "ORDER BY RANDOM() LIMIT 3;";
-							$EjecutarQueryRespuestasAleatorias=pg_query($QueryRespuestasAleatorias);
+							$EjecutarQueryRespuestasAleatorias=mysql_query($QueryRespuestasAleatorias);
 							if(!$EjecutarQueryRespuestasAleatorias){
 								$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 								cerrarConexion($Conexion);
@@ -452,11 +452,11 @@
 							}
 							//traigo 3 nombres de relacion aleatorios de la BD
 							//asigno a la primera posicion del vector VecRespuestas la opcion de relacion correcta
-							$TotalRand = 3-(pg_num_rows($EjecutarQueryRespuestasAleatorias));
+							$TotalRand = 3-(mysql_num_rows($EjecutarQueryRespuestasAleatorias));
 							$VecRespuestas[0]=$Relacion;
 							$Posicion=1;
 							//asigno los otros 3 nombres de relacion aleatorios
-							while($VecRespuestasAleatoriasQuery=pg_fetch_array($EjecutarQueryRespuestasAleatorias)){
+							while($VecRespuestasAleatoriasQuery=mysql_fetch_array($EjecutarQueryRespuestasAleatorias)){
 								$Posicion++;
 								$VecRespuestas[$Posicion]=$VecRespuestasAleatoriasQuery[0];
 							}
@@ -469,13 +469,13 @@
 								$QueryRespuestasAleatorias1 = "SELECT DISTINCT nombre_relacion, RANDOM() FROM relacion ";
 								$QueryRespuestasAleatorias1.= "WHERE nombre_relacion NOT IN(".$StringTempResp.") ";
 								$QueryRespuestasAleatorias1.= "ORDER BY RANDOM() LIMIT ".$TotalRand.";";
-								$EjecutarQueryRespuestasAleatorias1 = pg_query($QueryRespuestasAleatorias1);
+								$EjecutarQueryRespuestasAleatorias1 = mysql_query($QueryRespuestasAleatorias1);
 								if(!$EjecutarQueryRespuestasAleatorias1){
 									$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 									cerrarConexion($Conexion);
 									return $Respuesta->getXML();
 								}
-								while($VecRespuestasAleatoriasQuery1=pg_fetch_array($EjecutarQueryRespuestasAleatorias1)){
+								while($VecRespuestasAleatoriasQuery1=mysql_fetch_array($EjecutarQueryRespuestasAleatorias1)){
 									$Posicion++;
 									$VecRespuestas[$Posicion]=$VecRespuestasAleatoriasQuery1[0];
 								}
@@ -524,20 +524,20 @@
 							$QueryRespuestasAleatorias.= "	WHERE d.concepto_mapa_conceptual_id_mapa_conceptual = '".$IdMapa."' ";
 							$QueryRespuestasAleatorias.= "	AND d.concepto_id_concepto = '".$IdPadre."') ";
 							$QueryRespuestasAleatorias.= "ORDER BY RANDOM() LIMIT 3;";
-							$EjecutarQueryRespuestasAleatorias=pg_query($QueryRespuestasAleatorias);
+							$EjecutarQueryRespuestasAleatorias=mysql_query($QueryRespuestasAleatorias);
 							if(!$EjecutarQueryRespuestasAleatorias){
 								$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 								cerrarConexion($Conexion);
 								return $Respuesta->getXML();
 							}
-							$TotalRand = 3-(pg_num_rows($EjecutarQueryRespuestasAleatorias));
+							$TotalRand = 3-(mysql_num_rows($EjecutarQueryRespuestasAleatorias));
 							//traigo 3 nombres de concepto aleatorios de la BD
 							//asigno al primer registro de la matriz VecRespuestas la opcion de relacion correcta y el id correspondiente
 							$VecRespuestas[0][0]=$IdHijo;
 							$VecRespuestas[0][1]=$VecHijo[0];
 							$Posicion=1;
 							//asigno los otros 3 nombres de concepto e ids aleatorios
-							while($VecRespuestasAleatoriasQuery=pg_fetch_array($EjecutarQueryRespuestasAleatorias)){
+							while($VecRespuestasAleatoriasQuery=mysql_fetch_array($EjecutarQueryRespuestasAleatorias)){
 								$Posicion++;
 								$VecRespuestas[$Posicion][0]=$VecRespuestasAleatoriasQuery[1];
 								$VecRespuestas[$Posicion][1]=$VecRespuestasAleatoriasQuery[0];
@@ -555,13 +555,13 @@
 								$QueryRespuestasAleatorias1.= "	WHERE b.concepto_mapa_conceptual_id_mapa_conceptual = '".$IdMapa."' ";
 								$QueryRespuestasAleatorias1.= "	AND b.concepto_id_concepto = '".$IdPadre."') ";
 								$QueryRespuestasAleatorias1.= "ORDER BY RANDOM() LIMIT ".$TotalRand.";";
-								$EjecutarQueryRespuestasAleatorias1 = pg_query($QueryRespuestasAleatorias1);
+								$EjecutarQueryRespuestasAleatorias1 = mysql_query($QueryRespuestasAleatorias1);
 								if(!$EjecutarQueryRespuestasAleatorias1){
 									$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 									cerrarConexion($Conexion);
 									return $Respuesta->getXML();
 								}
-								while($VecRespuestasAleatoriasQuery1=pg_fetch_array($EjecutarQueryRespuestasAleatorias1)){
+								while($VecRespuestasAleatoriasQuery1=mysql_fetch_array($EjecutarQueryRespuestasAleatorias1)){
 									$Posicion++;
 									$VecRespuestas[$Posicion][0]=$VecRespuestasAleatoriasQuery1[1];
 									$VecRespuestas[$Posicion][1]=$VecRespuestasAleatoriasQuery1[0];
@@ -621,10 +621,10 @@
 	$Xajax->registerFunction('generarPreguntas');
 	
 	/**
-	* Esta función se encarga de mostrar las preguntas una a una del nivel (recursivo)
-	* @param string[] $VecPregImp Vector que contiene la información de las preguntas
-	* @param integer $Nivel Número que muestra el nivel actual
-	* @param integer $IdMapa Código del mapa
+	* Esta funciï¿½n se encarga de mostrar las preguntas una a una del nivel (recursivo)
+	* @param string[] $VecPregImp Vector que contiene la informaciï¿½n de las preguntas
+	* @param integer $Nivel Nï¿½mero que muestra el nivel actual
+	* @param integer $IdMapa Cï¿½digo del mapa
 	* @param integer $Indice Posicion actual
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
@@ -642,7 +642,7 @@
 			$VecTemp = $VecPregImp[$C];
 			if($VecPregImp[$C]!="" and $Valor==true){
 				$Valor = false;
-				$Dato = $VecTemp[0]."±".$VecTemp[1]."±".$VecTemp[2];
+				$Dato = $VecTemp[0]."ï¿½".$VecTemp[1]."ï¿½".$VecTemp[2];
 				$Preg = $Indice.". ".$VecTemp[3];
 				$VecPreg[$C] = "";
 			}
@@ -650,7 +650,7 @@
 				$VecPreg[$C] = "";
 			}
 			else{
-				$VecPreg[$C] = $VecTemp[0]."±".$VecTemp[1]."±".$VecTemp[2]."±".$VecTemp[3];
+				$VecPreg[$C] = $VecTemp[0]."ï¿½".$VecTemp[1]."ï¿½".$VecTemp[2]."ï¿½".$VecTemp[3];
 			}
 		}
 		$Salida = "<table cellspacing='0' cellpadding='0' align='center' width='100%'>";
@@ -671,7 +671,7 @@
 		$Salida.= "<form id='FormularioPregunta' name='FormularioPregunta'>";
 		$Salida.= $Preg;
 		$VecPreg = implode("@",$VecPreg);
-		$VecPreg = str_replace('"',"¬",$VecPreg);
+		$VecPreg = str_replace('"',"ï¿½",$VecPreg);
 		$VecPreg = str_replace("'","|",$VecPreg);
 		$Salida.= "<div align='center'><input type='button' name='Continuar' id='Continuar' value='Continuar' onClick=\"xajax_escribirArchivo('".$VecPreg."','".$Dato."',xajax.getFormValues(this.form.name),".$IdMapa.",".$Nivel.",".$Indice.");\"></div>";
 		$Salida.= "</form>";
@@ -682,24 +682,24 @@
 	$Xajax->registerFunction('mostrarPregunta');
 	
 	/**
-	* Esta función se encarga de escribir los datos de las respuestas anteriores asi como de la respuesta actual en el archivo temporal
-	* @param string[] $Matriz Vector que contiene la información de las preguntas
-	* @param string[] $VecDatos Número que muestra el nivel actual
+	* Esta funciï¿½n se encarga de escribir los datos de las respuestas anteriores asi como de la respuesta actual en el archivo temporal
+	* @param string[] $Matriz Vector que contiene la informaciï¿½n de las preguntas
+	* @param string[] $VecDatos Nï¿½mero que muestra el nivel actual
 	* @param string $Rta Cadena que contiene la respuesta
-	* @param integer $IdMap Código del mapa
-	* @param integer $Nivel Número que indica el nivel actual
+	* @param integer $IdMap Cï¿½digo del mapa
+	* @param integer $Nivel Nï¿½mero que indica el nivel actual
 	* @param integer $Ind
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function escribirArchivo($Matriz,$VecDatos,$Rta,$IdMap,$Nivel,$Ind){
 		$Respuesta = new xajaxResponse('ISO-8859-1');
 		$Matriz = str_replace("|","'",$Matriz);
-		$Martiz = str_replace("¬",'"',$Matriz);
+		$Martiz = str_replace("ï¿½",'"',$Matriz);
 		$Matriz = explode("@",$Matriz);
-		$VecDatos = explode("±",$VecDatos);
+		$VecDatos = explode("ï¿½",$VecDatos);
 		for($I=0;$I<count($Matriz);$I++){
 			if($Matriz[$I]!=""){
-				$Vector = explode("±",$Matriz[$I]);
+				$Vector = explode("ï¿½",$Matriz[$I]);
 				$Matriz[$I] = $Vector;
 			}
 		}

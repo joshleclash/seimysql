@@ -82,8 +82,7 @@
 		$Salida.="<th>Mapas Asociados</th>";
 		$Salida.="</tr>";
 		$Query="SELECT id_grupo as 'grupo', nombre_grupo as 'nom', descripcion_grupo as 'desc' FROM grupo WHERE id_grupo IN(SELECT grupo_id_grupo FROM grupo_usuario WHERE usuario_id_usuario='".$NumIdDocente."');";
-               
-		$ResultadoQuery=mysql_query($Query);
+                $ResultadoQuery=mysql_query($Query);
 		if(!$ResultadoQuery){
 			$Respuesta->addAlert("Ha ocurrido un error. ".  mysql_error());
 		}
@@ -96,9 +95,9 @@
 					//encontrar si alguno de los juegos ha sido ejecutado, si no es asi si se puede eliminar el grupo
                                         $sql="SELECT duracion_real FROM historial_juego_respuesta 
 					WHERE usuario_id_usuario IN (SELECT usuario_id_usuario FROM grupo_usuario WHERE grupo_id_grupo='".$VectorGrupo["grupo"]."');";
-					$QueryRtas=mysql_query($sql);
                                         
-					if($QueryRtas){
+					$QueryRtas=mysql_query($sql);
+                                        if($QueryRtas){
 						$NumRtas=mysql_num_rows($QueryRtas);
 						if($NumRtas==0){
 							$Salida.="<a href='javascript:void(0)' onClick=\"confirmarEliminarGrupo('".$NumIdDocente."','".$VectorGrupo["grupo"]."')\" title='Haga click para eliminar el grupo'><img src='img/ico_eliminar.gif' border='0'></a>";
@@ -557,18 +556,19 @@
 		$Salida.= "<tr align='left'><th width='80%'>Nombre Mapa</th><th width='20%'>Estado</th></tr>";
 			$SqlDoc = "SELECT id_mapa_conceptual, nombre_mapa, estado_mapa FROM mapa_conceptual WHERE ";
 			$SqlDoc.= "usuario_id_usuario='".$_SESSION["NumIdentidad"]."' AND estado_mapa='1';";
-			$QueryDoc=mysql_query($SqlDoc);
-			
+                        $QueryDoc=mysql_query($SqlDoc);
 			if(!$QueryDoc){
 				$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
 				return $Respuesta->getXML();
 			}
 			if(mysql_num_rows($QueryDoc)!=0){
 				while($VecD=mysql_fetch_array($QueryDoc)){
-					$IdMapa=$VecD[0];
-					$NomMapa=$VecD[1];
-					$EstadoMapa=$VecD[2];
-					$QueryJuegos=mysql_query("SELECT j.id_juego as id, j.nombre_juego as nom, jm.duracion_juego as tiempo, jm.estado_juego_mapa as estado, jm.mostrar_status as status FROM juego j, juego_mapa jm WHERE j.id_juego=jm.juego_id_juego AND jm.mapa_conceptual_id_mapa_conceptual='".$IdMapa."'");
+                                    	$IdMapa=$VecD["id_mapa_conceptual"];
+					$NomMapa=$VecD["nombre_mapa"];
+					$EstadoMapa=$VecD["estado_mapa"];
+                                        $sql ="SELECT j.id_juego as id, j.nombre_juego as nom, jm.duracion_juego as tiempo, jm.estado_juego_mapa as estado, jm.mostrar_status as status FROM juego j, juego_mapa jm WHERE j.id_juego=jm.juego_id_juego AND jm.mapa_conceptual_id_mapa_conceptual='".$IdMapa."'";
+					
+                                        $QueryJuegos=mysql_query($sql);
 					if(mysql_num_rows($QueryJuegos)>0){
 						$Salida.="<tr align='left'>";
 						$Salida.="<td valign='top'>".$NomMapa."<br>";
