@@ -19,7 +19,7 @@
 		$SqlRec.= "		SELECT d.mapa_conceptual_id_mapa_conceptual FROM juego_mapa d ";
 		$SqlRec.= "		WHERE d.estado_juego_mapa <> '0')";
 		$SqlRec.= "AND a.estado_mapa = '1';";
-		
+		//echo $SqlRec;
 		$QueryRec = mysql_query($SqlRec);
 	
 		if(!$QueryRec){

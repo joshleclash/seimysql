@@ -131,6 +131,7 @@
 			$DateLimit = date("Y-m-d H:i:s", mktime( ($NowDate["hours"]+$Duracion), ($NowDate["minutes"]),($NowDate["seconds"]),($NowDate["mon"]),($NowDate["mday"]),($NowDate["year"])));
 			$ResultadoIdMP=mysql_query($ConsultaIdMP);   
                         $rows = mysql_num_rows($ResultadoIdMP);
+                        //$rows=0;
                         if($rows == 0)
 			{
 				$InsercionMP="INSERT INTO mapa_conceptual 
@@ -142,41 +143,49 @@
                                 if($rs){
                                     $lastId = mysql_insert_id();
                                     $x=0;
-                                    foreach($Concepto as $k ):
-                                        
+                                    foreach($Concepto as $k =>$val):
                                                 //INSERCION DE CONCEPTOS
                                             $InsercionConcepto="INSERT INTO concepto 
                                                         (mapa_conceptual_id_mapa_conceptual, id_concepto, nombre_concepto, texto_concepto) ".   
-                                                        "VALUES(".$lastId.",'".$k["NumConcepto"]."','".$k["NomConcepto"]."','".$k["TextoDesc"]."');";
+                                                        "VALUES(".$lastId.",'".$val["NumConcepto"]."','".$val["NomConcepto"]."','".$val["TextoDesc"]."');";
                                                     $rsConcept= mysql_query($InsercionConcepto);
                                                     if(!$rsConcept){
-                                                        return 'Error guardando concepto! fallo'.  mysql_error();
+                                                        echo 'Error guardando concepto! fallo'.  mysql_error();
                                                     }
-                                                    if($x>0){
-                                                        $InsercionRelacion="INSERT INTO relacion
-                                                                        (concepto_mapa_conceptual_id_mapa_conceptual, concepto_id_concepto, id_concepto_hijo, nombre_relacion)  
-                                                                         VALUES(".$lastId.",'".trim($k['NumRelacionUp'])."','".trim($k['NumConcepto'])."',
-                                                                         '".trim($k['RelacionUp'])."');";
-                                                            $rsRelacion = mysql_query($InsercionRelacion);
-                                                            if(!$rsRelacion){
-                                                                return 'Error guardando relacion! fallo'.  mysql_error();
-                                                            }
-                                                   }
-                                              $x++;      
                                     endforeach;
-                                    $InsertarTematica="INSERT INTO mapa_conceptual_tematica VALUES('".$Tematica."','".$lastId."')";
-					if(!mysql_query($InsertarTematica)){
-						return "No hay juegos para insertar";
+                                                    $sqlConcepto =  "SELECT id_concepto FROM concepto
+										WHERE mapa_conceptual_id_mapa_conceptual=".$lastId.";";
+                                                   $rsConcepto = mysql_query($sqlConcepto);
+                                                   //print_r($Concepto);
+                                                   while($rowConcepto = mysql_fetch_array($rsConcepto)):
+                                                       //$Vector["NumConcepto"])==@$Indice['id_concepto'] && $Clave > 0
+                                                       foreach($Concepto as $key =>$val):
+                                                       if($val["NumConcepto"]==$rowConcepto["id_concepto"] && $key >0):
+                                                                $InsercionRelacion="INSERT INTO relacion 
+								VALUES(".$lastId.",'".trim($val['NumRelacionUp'])."','".trim($val['NumConcepto'])."',
+								'".trim($val['RelacionUp'])."');";
+                                                                $rsRelacion = mysql_query($InsercionRelacion);
+                                                                 if(!$rsRelacion){
+                                                                     echo "Error al almacenar relacion";
+                                                                 }
+                                                       endif;
+                                                       endforeach;
+                                                  endwhile;
+                                    if(!empty($Tematica)){
+                                        $InsertarTematica="INSERT INTO mapa_conceptual_tematica VALUES('".$Tematica."','".$lastId."')";
+                                        if(!mysql_query($InsertarTematica)){
+						echo "No hay juegos para insertar";
 					}
-                                    return true;
+                                    }
+                                    echo true;
                                 }else{
-                                    return 'Error en la insercion de mapa conceptual';
+                                    echo 'Error en la insercion de mapa conceptual';
                                 }
                             }else{
-                                return 'El nombre de mapa'.$InfoGeneralConcepto['NombreMapa'].'Ya esta resgitrado en nuestro sistema por favor cambielo';
+                                echo 'El nombre de mapa'.$InfoGeneralConcepto['NombreMapa'].'Ya esta resgitrado en nuestro sistema por favor cambielo';
                             }
                      }else{
-                         return 'Exisito un error en la conexion por favor valide la informacion';
+                         echo 'Exisito un error en la conexion por favor valide la informacion';
                      }
                                 
                                 /*OLD VERSION
@@ -787,7 +796,8 @@
 			}
                         
 			//informacion del mapa
-			$VecMapa=mysql_fetch_array(mysql_query("SELECT nombre_mapa as nombre, estado_mapa as estado, duracion_mapa as duracion FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';"));
+                        $sql="SELECT nombre_mapa as nombre, estado_mapa as estado, duracion_mapa as duracion FROM mapa_conceptual WHERE id_mapa_conceptual='".$IdMapa."';";
+			$VecMapa=mysql_fetch_array(mysql_query($sql));
 			//cuadramos el intervalo y la duracion
 			if($VecMapa["duracion"]<24){
 				$d=$VecMapa["duracion"];
@@ -821,7 +831,7 @@
 			if($VecMapa["estado"]==0){
 				$Salida.="  onDblClick=\"xajax_cargarComboTematica(this.id,'xajax_cargarFormaMapa','1')\" title='Haga doble click para editar la tematica'";
 			}
-			$Salida.=">".$Tema["nom"]."</span><input type='hidden' name='txtTematica' id='txtTematica' value='".$Tema["id"]."'>";
+			$Salida.=">".$Tema["nom"]."</span><input type='hidden' name='txtTematica' id='txtTematica' value='".$Tema["id"]."'/>";
 			$Salida.="</td>";
 			$Salida.="</tr>";
 			$Salida.="<tr>";
@@ -878,7 +888,7 @@
 	* @return xajaxResponse Objeto con la respuesta de la libreria XAjax
 	*/
 	function mostrarHojasMapa($IdMapa,$EstadoMapa,$IdConcepto,$CadenaPadres){
-		$Respuesta = new xajaxResponse('ISO-8859-1');
+                $Respuesta = new xajaxResponse('ISO-8859-1');
 		$Conexion=abrirConexion();
 		$VectorIdHijo=array("");
 		$VectorNomHijo=array("");
@@ -895,8 +905,9 @@
 				$CampoMenu="menu_".$NomenIdPadre;
 				$CampoInicial=$NomenIdPadre;
 			}
-			$QueryHijos=mysql_query("SELECT id_concepto_hijo as id_hijo, nombre_relacion as relacion FROM relacion WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."' 
-			AND concepto_id_concepto='".$IdConcepto."';");
+                        $sql="SELECT id_concepto_hijo as id_hijo, nombre_relacion as relacion FROM relacion WHERE concepto_mapa_conceptual_id_mapa_conceptual='".$IdMapa."' 
+			AND concepto_id_concepto='".$IdConcepto."';";
+			$QueryHijos=mysql_query($sql);
 			if($QueryHijos){
 				if(mysql_num_rows($QueryHijos)>0){
 					while($Vector=mysql_fetch_array($QueryHijos)){
@@ -908,7 +919,8 @@
 					}
 					$Respuesta->addScriptCall("generarHojasEditadas",$CampoMenu,$CampoInicial,$VectorNomHijo,$VectorRelHijo,$EstadoMapa);
 					foreach($VectorIdHijo as $Vih){
-						if($Vih!=""){
+                                           	if($Vih!=""){
+                                                    //echo $Vih."|"; 
 							$Respuesta->addScriptCall("xajax_mostrarHojasMapa",$IdMapa,$EstadoMapa,$Vih,$CadenaPadres);
 						}
 					}

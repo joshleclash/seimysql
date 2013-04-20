@@ -1,7 +1,7 @@
 <?php
 //componente creadopor juan russi
 require_once('Dialog.php');
-require_once('Config.php');
+//require_once('Config.php');
 require_once('PHPMail.php');
 require_once ('Credenciales.php');
 //Example for use Dialog

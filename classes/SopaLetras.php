@@ -133,8 +133,8 @@
 		{
 			$Query = "SELECT nombre_concepto
 					  FROM     concepto
-					  WHERE mapa_conceptual_id_mapa_conceptual='".$IdMapa."'
-					  AND nombre_concepto like '%[*AZ]%' ";
+					  WHERE mapa_conceptual_id_mapa_conceptual='".$IdMapa."'";
+					  //AND nombre_concepto like '%[*AZ]%' ";
 					  
 			$ResSelect=mysql_query($Query);
 			if(!$ResSelect){
@@ -232,8 +232,9 @@
 				$Respuesta->addScript($Js2);
 				//query para traer la duracion del juego
 				$SqlTiempoLim = "SELECT duracion_juego as tiempo FROM juego_mapa WHERE ";
-				$SqlTiempoLim .= "juego_id_juego IN(SELECT id_juego FROM juego WHERE nombre_juego='Sopa Letras' LIMIT 1) AND ";
+				$SqlTiempoLim .= "juego_id_juego IN(SELECT id_juego FROM juego WHERE nombre_juego='Sopa Letras') AND ";
 				$SqlTiempoLim .= "mapa_conceptual_id_mapa_conceptual='".$IdMapa."' LIMIT 1;";
+                                //echo $SqlTiempoLim;
 				$VecJuego=mysql_fetch_array(mysql_query($SqlTiempoLim));
 				//inicio de cronometro
 				$Hora=explode(":",date("H:i:s",mktime(0,0,$VecJuego["tiempo"])));

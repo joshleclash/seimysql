@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-04-2013 a las 04:50:59
+-- Tiempo de generación: 20-04-2013 a las 22:27:39
 -- Versión del servidor: 5.5.27
 -- Versión de PHP: 5.4.7
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `concepto` (
   `mapa_conceptual_id_mapa_conceptual` int(11) NOT NULL,
   `id_concepto` varchar(11) NOT NULL,
   `nombre_concepto` varchar(500) NOT NULL,
-  `texto_concepto` text
+  `texto_concepto` varchar(20) DEFAULT '""'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -58,7 +58,217 @@ INSERT INTO `concepto` (`mapa_conceptual_id_mapa_conceptual`, `id_concepto`, `no
 (57, '1', 'TEST2', ''),
 (57, '1.1', 'Concepto1TEST', ''),
 (57, '1.2', 'Concepto2', ''),
-(57, '1.3', 'Concepto3', '');
+(57, '1.3', 'Concepto3', ''),
+(58, '1', 'TEST1', ''),
+(58, '1.1', 'Concepto', ''),
+(58, '1.2', ' uodate', ''),
+(58, '1.2.1', 'Otro Concepto', ''),
+(59, '1', 'TEST1', ''),
+(59, '1.1', 'Concepto', ''),
+(59, '1.2', ' uodate', ''),
+(59, '1.2.1', 'Otro Concepto', ''),
+(60, '1', 'TEST1', ''),
+(60, '1.1', 'Concepto', ''),
+(60, '1.2', ' uodate', ''),
+(60, '1.2.1', 'Otro Concepto', ''),
+(61, '1', 'TEST1', ''),
+(61, '1.1', 'Concepto', ''),
+(61, '1.2', ' uodate', ''),
+(61, '1.2.1', 'Otro Concepto', ''),
+(62, '1', 'TEST1', ''),
+(62, '1.1', 'Concepto', ''),
+(62, '1.2', ' uodate', ''),
+(62, '1.2.1', 'Otro Concepto', ''),
+(63, '1', 'TEST1', ''),
+(63, '1.1', 'Concepto', ''),
+(63, '1.2', ' uodate', ''),
+(63, '1.2.1', 'Otro Concepto', ''),
+(64, '1', 'TEST1', ''),
+(64, '1.1', 'Concepto', ''),
+(64, '1.2', ' uodate', ''),
+(64, '1.2.1', 'Otro Concepto', ''),
+(65, '1', 'TEST1', ''),
+(65, '1.1', 'Concepto', ''),
+(65, '1.2', ' uodate', ''),
+(65, '1.2.1', 'Otro Concepto', ''),
+(66, '1', 'TEST1', ''),
+(66, '1.1', 'Concepto', ''),
+(66, '1.2', ' uodate', ''),
+(66, '1.2.1', 'Otro Concepto', ''),
+(67, '1', 'TEST1', ''),
+(67, '1.1', 'Concepto', ''),
+(67, '1.2', ' uodate', ''),
+(67, '1.2.1', 'Otro Concepto', ''),
+(68, '1', 'TEST', ''),
+(68, '1.1', 'Concepto', ''),
+(69, '1.1', 'TEST', ''),
+(70, '1', 'TEST', ''),
+(71, '1', 'TEST', ''),
+(72, '1', 'TEST', ''),
+(73, '1', 'TEST', ''),
+(76, '1', 'TEST', ''),
+(76, '1', 'TEST', ''),
+(76, '1', 'TEST', ''),
+(77, '1', 'TEST', ''),
+(77, '1.1', 'Concepto', ''),
+(77, '1.1.1', 'concepto2', ''),
+(78, '1', 'TEST', ''),
+(78, '1.1', 'Concepto', ''),
+(78, '1.1.1', 'concepto2', ''),
+(79, '1', 'TEST', ''),
+(79, '1.1', 'Concepto', ''),
+(79, '1.1.1', 'concepto2', ''),
+(80, '1', 'TEST', ''),
+(80, '1.1', 'Concepto1', ''),
+(80, '1.1.1', 'Concepto 1.1', ''),
+(80, '1.2', '[Concepto]', ''),
+(81, '1', 'TEST', ''),
+(81, '1.1', 'Concepto1', ''),
+(81, '1.2', 'COncepto2', ''),
+(81, '1.2.1', '[Concepto]', ''),
+(82, '1', 'TEST', ''),
+(82, '1.1', 'Concepto1', ''),
+(82, '1.2', 'COncepto2', ''),
+(82, '1.2.1', '[Concepto]', ''),
+(85, '1', 'TEST', ''),
+(85, '1.1', 'Concepto1', ''),
+(85, '1.2', 'COncepto2', ''),
+(85, '1.2.1', '[Concepto]', ''),
+(86, '1', 'TESTMAPA', ''),
+(86, '1.1', '[Concepto]', ''),
+(86, '1.2', '[Concepto]', ''),
+(86, '1.2.1', '[Concepto]', ''),
+(86, '1.2.2', '[Concepto]', ''),
+(86, '1.3', '[Concepto]', ''),
+(87, '1', 'MAPA', ''),
+(87, '1.1', '[Concepto]', ''),
+(87, '1.2', '[Concepto]', ''),
+(87, '1.3', '[Concepto]', ''),
+(87, '1.4', '[Concepto]', ''),
+(87, '1.4.1', '[Concepto]', ''),
+(88, '1', 'MAPA', ''),
+(88, '1.1', '[Concepto]', ''),
+(88, '1.2', '[Concepto]', ''),
+(88, '1.3', '[Concepto]', ''),
+(88, '1.4', '[Concepto]', ''),
+(88, '1.4.1', '[Concepto]', ''),
+(89, '1', 'MAPA', ''),
+(89, '1.1', '[Concepto]', ''),
+(89, '1.2', '[Concepto]', ''),
+(89, '1.3', '[Concepto]', ''),
+(89, '1.4', '[Concepto]', ''),
+(89, '1.4.1', '[Concepto]', ''),
+(90, '1', 'MAPA', ''),
+(90, '1.1', '[Concepto]', ''),
+(90, '1.2', '[Concepto]', ''),
+(90, '1.3', '[Concepto]', ''),
+(90, '1.4', '[Concepto]', ''),
+(90, '1.4.1', '[Concepto]', ''),
+(91, '1', 'MAPA', ''),
+(91, '1.1', '[Concepto]', ''),
+(91, '1.2', '[Concepto]', ''),
+(91, '1.3', '[Concepto]', ''),
+(91, '1.4', '[Concepto]', ''),
+(91, '1.4.1', '[Concepto]', ''),
+(92, '1', 'MAPA', ''),
+(92, '1.1', '[Concepto]', ''),
+(92, '1.1.1', '[Concepto]', ''),
+(92, '1.1.2', '[Concepto]', ''),
+(92, '1.2', '[Concepto]', ''),
+(92, '1.3', '[Concepto]', ''),
+(92, '1.4', '[Concepto]', ''),
+(93, '1', 'MAPA', ''),
+(93, '1.1', '[Concepto]', ''),
+(93, '1.1.1', '[Concepto]', ''),
+(93, '1.2', '[Concepto]', ''),
+(93, '1.3', '[Concepto]', ''),
+(93, '1.4', '[Concepto]', ''),
+(94, '1', 'MAPA', ''),
+(94, '1.1', '[Concepto]', ''),
+(94, '1.1.1', '[Concepto]', ''),
+(94, '1.2', '[Concepto]', ''),
+(94, '1.3', '[Concepto]', ''),
+(94, '1.4', '[Concepto]', ''),
+(95, '1', 'OTRO', ''),
+(95, '1.1', '[Concepto]', ''),
+(95, '1.1.1', '[Concepto]', ''),
+(95, '1.2', '[Concepto]', ''),
+(95, '1.2.1', '[Concepto]', ''),
+(96, '1', 'OTRO', ''),
+(96, '1.1', '[Concepto]', ''),
+(96, '1.1.1', '[Concepto]', ''),
+(96, '1.2', '[Concepto]', ''),
+(96, '1.2.1', '[Concepto]', ''),
+(97, '1', 'OTRO', ''),
+(97, '1.1', '[Concepto]', ''),
+(97, '1.1.1', '[Concepto]', ''),
+(97, '1.2', '[Concepto]', ''),
+(97, '1.2.1', '[Concepto]', ''),
+(98, '1', 'OTRO', ''),
+(98, '1.1', '[Concepto]', ''),
+(98, '1.1.1', '[Concepto]', ''),
+(98, '1.2', '[Concepto]', ''),
+(98, '1.2.1', '[Concepto]', ''),
+(99, '1', 'OTRO', ''),
+(99, '1.1', '[Concepto]', ''),
+(99, '1.1.1', '[Concepto]', ''),
+(99, '1.2', '[Concepto]', ''),
+(99, '1.2.1', '[Concepto]', ''),
+(100, '1', 'OTRO', ''),
+(100, '1.1', '[Concepto]', ''),
+(100, '1.1.1', '[Concepto]', ''),
+(100, '1.2', '[Concepto]', ''),
+(101, '1', 'OTRO', ''),
+(101, '1.1', '[Concepto]', ''),
+(101, '1.1.1', '[Concepto]', ''),
+(101, '1.1.2', '[Concepto]', ''),
+(101, '1.2', '[Concepto]', ''),
+(101, '1.2.1', '[Concepto]', ''),
+(102, '1', 'JUEGORAIZ', ''),
+(102, '1.1', '[Concepto]', ''),
+(102, '1.1.1', '[Concepto]', ''),
+(102, '1.1.2', '[Concepto]', ''),
+(102, '1.2', '[Concepto]', ''),
+(102, '1.2.1', '[Concepto]', ''),
+(102, '1.2.2', '[Concepto]', ''),
+(102, '1.3', '[Concepto]', ''),
+(102, '1.3.1', '[Concepto]', ''),
+(102, '1.3.2', '[Concepto]', ''),
+(102, '1.4', '[Concepto]', ''),
+(102, '1.5', '[Concepto]', ''),
+(102, '1.5.1', '[Concepto]', ''),
+(102, '1.5.2', '[Concepto]', ''),
+(102, '1.6', '[Concepto]', ''),
+(102, '1.7', '[Concepto]', ''),
+(102, '1.7.1', '[Concepto]', ''),
+(102, '1.7.2', '[Concepto]', ''),
+(102, '1.8', '[Concepto]', ''),
+(102, '1.8.1', '[Concepto]', ''),
+(102, '1.8.2', '[Concepto]', ''),
+(102, '1.9', '[Concepto]', ''),
+(102, '1.9.1', '[Concepto]', ''),
+(102, '1.9.2', '[Concepto]', ''),
+(103, '1', 'BETOCABECERA', ''),
+(103, '1.1', 'concepto', ''),
+(103, '1.2', 'concepto', ''),
+(103, '1.3', 'concepto', ''),
+(103, '1.4', 'concepto', ''),
+(103, '1.5', 'concepto', ''),
+(103, '1.5.1', '[Concepto]', ''),
+(104, '1', 'BETOCABECERA', ''),
+(104, '1.1', 'concepto', ''),
+(104, '1.2', 'concepto', ''),
+(104, '1.3', 'concepto', ''),
+(104, '1.4', 'concepto', ''),
+(104, '1.5', 'concepto', ''),
+(104, '1.5.1', '[Concepto]', ''),
+(106, '1', 'BETOCABECERA', ''),
+(106, '1.1', 'concepto', ''),
+(106, '1.2', 'concepto', ''),
+(106, '1.3', 'concepto', ''),
+(106, '1.4', 'concepto', ''),
+(106, '1.5', 'concepto', ''),
+(106, '1.5.1', '[Concepto]', '');
 
 -- --------------------------------------------------------
 
@@ -100,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `grupo_mapa_conceptual` (
 INSERT INTO `grupo_mapa_conceptual` (`mapa_conceptual_id_mapa`, `grupo_id_grupo`) VALUES
 (18, 4),
 (18, 2),
-(57, 3);
+(106, 3);
 
 -- --------------------------------------------------------
 
@@ -192,7 +402,7 @@ CREATE TABLE IF NOT EXISTS `juego_mapa` (
   `juego_id_juego` int(11) NOT NULL,
   `duracion_juego` int(11) NOT NULL,
   `estado_juego_mapa` int(11) NOT NULL,
-  `mostrar_status` int(11) NOT NULL
+  `mostrar_status` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -200,8 +410,21 @@ CREATE TABLE IF NOT EXISTS `juego_mapa` (
 --
 
 INSERT INTO `juego_mapa` (`mapa_conceptual_id_mapa_conceptual`, `juego_id_juego`, `duracion_juego`, `estado_juego_mapa`, `mostrar_status`) VALUES
-(19, 2, 30, 1, 1),
-(19, 1, 30, 1, 1);
+(106, 2, 30, 1, 1),
+(106, 1, 30, 1, 1),
+(1, 1, 1, 1, 1),
+(0, 1, 120, 1, 1),
+(0, 2, 120, 1, 1),
+(1, 1, 1, 1, 1),
+(0, 1, 120, 1, 1),
+(0, 2, 120, 1, 1),
+(1, 1, 1, 1, 1),
+(0, 1, 120, 1, 1),
+(0, 2, 120, 1, 1),
+(1, 1, 1, 1, 1),
+(0, 1, 120, 1, 1),
+(0, 2, 120, 1, 1),
+(1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -221,15 +444,56 @@ CREATE TABLE IF NOT EXISTS `mapa_conceptual` (
   `fecha_limite` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `id_mapa_conceptual` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id_mapa_conceptual`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=107 ;
 
 --
 -- Volcado de datos para la tabla `mapa_conceptual`
 --
 
 INSERT INTO `mapa_conceptual` (`usuario_id_usuario`, `tipo_mapa_id_tipo_mapa`, `nombre_mapa`, `total_conceptos`, `total_relaciones`, `estado_mapa`, `duracion_mapa`, `fecha_inicio`, `fecha_limite`, `id_mapa_conceptual`) VALUES
-(123456, 1, 'TEST', 3, 2, '0', 1, '2013-04-19 02:34:17', '2013-04-19 03:34:17', 55),
-(123456, 1, 'TEST1', 4, 3, '1', 1, '2013-04-19 02:49:47', '2013-04-19 03:38:49', 57);
+(123456, 1, 'MAPAPRUEBA', 6, 5, '0', 1, '2013-04-20 15:56:52', '2013-04-20 16:56:52', 87),
+(123456, 1, 'MAPAPRUEBA', 6, 5, '0', 1, '2013-04-20 15:57:13', '2013-04-20 16:57:13', 88),
+(123456, 1, 'MAPAPRUEBA', 6, 5, '0', 1, '2013-04-20 16:00:46', '2013-04-20 17:00:46', 89),
+(123456, 1, 'MAPAPRUEBA', 6, 5, '0', 1, '2013-04-20 16:01:45', '2013-04-20 17:01:45', 90),
+(123456, 1, 'MAPAPRUEBA', 8, 7, '0', 1, '2013-04-20 16:28:15', '2013-04-20 17:28:15', 94),
+(123456, 1, 'mierda', 8, 7, '0', 1, '2013-04-20 16:37:45', '2013-04-20 17:37:45', 95),
+(123456, 1, 'mierda', 8, 7, '0', 1, '2013-04-20 16:39:51', '2013-04-20 17:39:51', 96),
+(123456, 1, 'mierda', 8, 7, '0', 1, '2013-04-20 16:40:41', '2013-04-20 17:40:41', 97),
+(123456, 1, 'mierda', 8, 7, '0', 1, '2013-04-20 16:41:24', '2013-04-20 17:41:24', 98),
+(123456, 1, 'mierda', 8, 7, '1', 1, '2013-04-20 16:52:15', '2013-04-20 17:47:49', 101),
+(123456, 1, 'JUEGO', 24, 23, '1', 1, '2013-04-20 19:56:20', '2013-04-20 18:33:02', 102),
+(123456, 1, 'BETO', 7, 6, '1', 120, '2013-04-20 20:10:44', '2013-04-25 20:10:10', 106);
+
+--
+-- Disparadores `mapa_conceptual`
+--
+DROP TRIGGER IF EXISTS `CreateJuegoMapa`;
+DELIMITER //
+CREATE TRIGGER `CreateJuegoMapa` BEFORE INSERT ON `mapa_conceptual`
+ FOR EACH ROW BEGIN
+    INSERT INTO juego_mapa SET mapa_conceptual_id_mapa_conceptual = NEW.id_mapa_conceptual,
+                               juego_id_juego = 1,
+                               duracion_juego = NEW.duracion_mapa,
+                               estado_juego_mapa=1;
+    INSERT INTO juego_mapa SET mapa_conceptual_id_mapa_conceptual= NEW.id_mapa_conceptual,
+                               juego_id_juego = 2,
+                               duracion_juego = NEW.duracion_mapa,
+                               estado_juego_mapa=1;
+                                                             
+                              
+  END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `games`;
+DELIMITER //
+CREATE TRIGGER `games` AFTER INSERT ON `mapa_conceptual`
+ FOR EACH ROW BEGIN
+    INSERT INTO seimysql.juego_mapa
+              (mapa_conceptual_id_mapa_conceptual, juego_id_juego, duracion_juego, estado_juego_mapa, mostrar_status) 
+              VALUES (1, 1, 1, 1, 1);
+END
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -238,9 +502,8 @@ INSERT INTO `mapa_conceptual` (`usuario_id_usuario`, `tipo_mapa_id_tipo_mapa`, `
 --
 
 CREATE TABLE IF NOT EXISTS `mapa_conceptual_tematica` (
-  `tematica_id_tematica` int(11) NOT NULL,
-  `mapa_conceptual_id_mapa_conceptual` int(11) NOT NULL,
-  PRIMARY KEY (`tematica_id_tematica`)
+  `tematica_id_tematica` varchar(11) NOT NULL,
+  `mapa_conceptual_id_mapa_conceptual` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -248,9 +511,18 @@ CREATE TABLE IF NOT EXISTS `mapa_conceptual_tematica` (
 --
 
 INSERT INTO `mapa_conceptual_tematica` (`tematica_id_tematica`, `mapa_conceptual_id_mapa_conceptual`) VALUES
-(0, 51),
-(1, 53),
-(2, 49);
+('0', '51'),
+('1', '53'),
+('2', '94'),
+('1', '98'),
+('1', '97'),
+('1', '99'),
+('1', '100'),
+('1', '101'),
+('1', '102'),
+('2', '103'),
+('2', '104'),
+('2', '106');
 
 -- --------------------------------------------------------
 
@@ -305,7 +577,120 @@ INSERT INTO `relacion` (`concepto_mapa_conceptual_id_mapa_conceptual`, `concepto
 (56, '1.3', '1.3.2', 'TEST'),
 (57, '1', '1.1', 'relacion1'),
 (57, '1', '1.2', 'relacion1'),
-(57, '1', '1.3', 'relacion3');
+(57, '1', '1.3', 'relacion3'),
+(59, '1', '1', '1'),
+(59, '1', '1', '1'),
+(62, '1', '1', '1'),
+(62, '1', '1', '1'),
+(66, '', '', ''),
+(66, '', '', ''),
+(66, '', '', ''),
+(66, '', '', ''),
+(67, '1', '1', ''),
+(67, '1.1', '1.1', 'relacion de prueba'),
+(67, '1.2', '1.2', 'relacion de prueba2'),
+(67, '1.2.1', '1.2.1', 'Otra Relacion'),
+(68, '1', '1.1', 'relacion'),
+(79, '1', '1.1', 'relacion'),
+(79, '1.1', '1.1.1', 'relacion2'),
+(80, '1', '1.1', 'Relacion1'),
+(80, '1.1', '1.1.1', 'Relacion 1.1'),
+(80, '1', '1.2', 'Relacion2'),
+(90, '1', '1.1', 'Relacion'),
+(90, '1', '1.2', 'Relacion'),
+(90, '1', '1.3', 'Relacion'),
+(90, '1', '1.4', 'Relacion'),
+(90, '1.4', '1.4.1', 'Relacion'),
+(91, '1', '1.1', 'Relacion'),
+(91, '1', '1.2', 'Relacion'),
+(91, '1', '1.3', 'Relacion'),
+(91, '1', '1.4', 'Relacion'),
+(91, '1.4', '1.4.1', 'Relacion'),
+(92, '1', '1.1', 'Relacion'),
+(92, '1.1', '1.1.1', '[Relacion]'),
+(92, '1.1', '1.1.2', '[Relacion]'),
+(92, '1', '1.2', 'Relacion'),
+(92, '1', '1.3', 'Relacion'),
+(92, '1', '1.4', 'Relacion'),
+(93, '1', '1.1', 'Relacion'),
+(93, '1.1', '1.1.1', '[Relacion]'),
+(93, '1', '1.2', 'Relacion'),
+(93, '1', '1.3', 'Relacion'),
+(93, '1', '1.4', 'Relacion'),
+(94, '1', '1.1', 'Relacion'),
+(94, '1.1', '1.1.1', '[Relacion]'),
+(94, '1', '1.2', 'Relacion'),
+(94, '1', '1.3', 'Relacion'),
+(94, '1', '1.4', 'Relacion'),
+(95, '1', '1.1', 'ash'),
+(95, '1.1', '1.1.1', '[Relacion]'),
+(95, '1', '1.2', '[Relacion]'),
+(95, '1.2', '1.2.1', '[Relacion]'),
+(96, '1', '1.1', 'ash'),
+(96, '1.1', '1.1.1', '[Relacion]'),
+(96, '1', '1.2', '[Relacion]'),
+(96, '1.2', '1.2.1', '[Relacion]'),
+(97, '1', '1.1', 'ash'),
+(97, '1.1', '1.1.1', '[Relacion]'),
+(97, '1', '1.2', '[Relacion]'),
+(97, '1.2', '1.2.1', '[Relacion]'),
+(98, '1', '1.1', 'ash'),
+(98, '1.1', '1.1.1', '[Relacion]'),
+(98, '1', '1.2', '[Relacion]'),
+(98, '1.2', '1.2.1', '[Relacion]'),
+(99, '1', '1.1', 'ash'),
+(99, '1.1', '1.1.1', '[Relacion]'),
+(99, '1', '1.2', '[Relacion]'),
+(99, '1.2', '1.2.1', '[Relacion]'),
+(100, '1', '1.1', 'ash'),
+(100, '1.1', '1.2', '[Relacion]'),
+(100, '1', '1.1.1', '[Relacion]'),
+(101, '1', '1.1', 'ash'),
+(101, '1.1', '1.1.1', '[Relacion]'),
+(101, '1.1', '1.1.2', '[Relacion]'),
+(101, '1', '1.2', '[Relacion]'),
+(101, '1.2', '1.2.1', '[Relacion]'),
+(102, '1', '1.1', '[Relacion]'),
+(102, '1.1', '1.1.1', '[Relacion]'),
+(102, '1.1', '1.1.2', '[Relacion]'),
+(102, '1', '1.2', '[Relacion]'),
+(102, '1.2', '1.2.1', '[Relacion]'),
+(102, '1.2', '1.2.2', '[Relacion]'),
+(102, '1', '1.3', '[Relacion]'),
+(102, '1.3', '1.3.1', '[Relacion]'),
+(102, '1.3', '1.3.2', '[Relacion]'),
+(102, '1', '1.4', '[Relacion]'),
+(102, '1', '1.5', '[Relacion]'),
+(102, '1.5', '1.5.1', '[Relacion]'),
+(102, '1.5', '1.5.2', '[Relacion]'),
+(102, '1', '1.6', '[Relacion]'),
+(102, '1', '1.7', '[Relacion]'),
+(102, '1.7', '1.7.1', '[Relacion]'),
+(102, '1.7', '1.7.2', '[Relacion]'),
+(102, '1', '1.8', '[Relacion]'),
+(102, '1.8', '1.8.1', '[Relacion]'),
+(102, '1.8', '1.8.2', '[Relacion]'),
+(102, '1', '1.9', '[Relacion]'),
+(102, '1.9', '1.9.1', '[Relacion]'),
+(102, '1.9', '1.9.2', '[Relacion]'),
+(103, '1', '1.1', 'este'),
+(103, '1', '1.2', 'este'),
+(103, '1', '1.3', 'este'),
+(103, '1', '1.4', 'este'),
+(103, '1', '1.5', 'este'),
+(103, '1.5', '1.5.1', '[Relacion]'),
+(104, '1', '1.1', 'este'),
+(104, '1', '1.2', 'este'),
+(104, '1', '1.3', 'este'),
+(104, '1', '1.4', 'este'),
+(104, '1', '1.5', 'este'),
+(104, '1.5', '1.5.1', '[Relacion]'),
+(106, '1', '1.1', 'este'),
+(106, '1', '1.2', 'este'),
+(106, '1', '1.3', 'este'),
+(106, '1', '1.4', 'este'),
+(106, '1', '1.5', 'este'),
+(106, '1.5', '1.5.1', '[Relacion]');
 
 -- --------------------------------------------------------
 

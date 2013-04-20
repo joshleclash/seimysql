@@ -556,6 +556,7 @@
 		$Salida.= "<tr align='left'><th width='80%'>Nombre Mapa</th><th width='20%'>Estado</th></tr>";
 			$SqlDoc = "SELECT id_mapa_conceptual, nombre_mapa, estado_mapa FROM mapa_conceptual WHERE ";
 			$SqlDoc.= "usuario_id_usuario='".$_SESSION["NumIdentidad"]."' AND estado_mapa='1';";
+                        //echo $SqlDoc;
                         $QueryDoc=mysql_query($SqlDoc);
 			if(!$QueryDoc){
 				$Respuesta->AddAlert("No se ha podido traer datos de la BD.");
@@ -567,7 +568,7 @@
 					$NomMapa=$VecD["nombre_mapa"];
 					$EstadoMapa=$VecD["estado_mapa"];
                                         $sql ="SELECT j.id_juego as id, j.nombre_juego as nom, jm.duracion_juego as tiempo, jm.estado_juego_mapa as estado, jm.mostrar_status as status FROM juego j, juego_mapa jm WHERE j.id_juego=jm.juego_id_juego AND jm.mapa_conceptual_id_mapa_conceptual='".$IdMapa."'";
-					
+					//echo $sql;
                                         $QueryJuegos=mysql_query($sql);
 					if(mysql_num_rows($QueryJuegos)>0){
 						$Salida.="<tr align='left'>";

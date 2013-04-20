@@ -1,9 +1,6 @@
 <?php
 	//Atributos
 	//$Conexion;
-	$Servidor="";
-	$Usuario="";
-	$Clave="";
 	
 	/**  
 	 * Esta funcion se encarga de abrir la conexi�n con la base de datos.
@@ -12,13 +9,13 @@
 	function abrirConexion()
 	{
 		//lectura del archivo que contiene la info
+            $Servidor="localhost";
+            $Usuario="root";
+            $Clave="";
+            $Db="seimysql";
 		$NombreArchivo="conf/hdb.oej";	
 		$archivo = file($NombreArchivo); //creamos el array con las lineas del archivo
 		$lineas = count($archivo); //contamos los elementos del array, es decir el total de lineas
-		$Servidor="localhost";//base64_decode($archivo[0]);
-		$Usuario="root";//base64_decode($archivo[1]);
-		$Clave="";//base64_decode($archivo[2]);
-                $Db="seimysql";
 		//conexion a la base de datos
 		$Conexion = mysql_connect($Servidor,$Usuario,$Clave)or die("Error en la conexion con el servidor");
                         mysql_selectdb($Db, $Conexion);
